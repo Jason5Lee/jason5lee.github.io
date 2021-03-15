@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Customized trait object in Rust | Jason5Lee&#39;s Personal Blog</title>
+  
+  
+  
+  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+<div class="Shell">
+    <aside class='SideBar'>
+    <section class='avatar' style="background-image: url()">
+        <div class='av-pic' style="background-image: url()">
+        </div>
+    </section>
+    <section class='menu'>
+        <div>Jason5Lee&#39;s Personal Blog</div>
+        
+            <div>Keep It Simple Straightforward</div>
+        
+        <ul>
+          
+            <a href="/" class="Btn">
+              <li>Home</li>
+            </a>  
+          
+            <a href="/archives" class="Btn">
+              <li>Archives</li>
+            </a>  
+          
+            <a href="/tags" class="Btn">
+              <li>Tags</li>
+            </a>  
+          
+            <a href="/categories" class="Btn">
+              <li>Categories</li>
+            </a>  
+          
+        </ul>
+    </section>
+    <section class="media">
+        
+    </section>
+</aside>
+
+    <div class="container">
+        <div data-pager-shell>
+            <div>
+  <article class='ContentView'>
+    <header class='PageTitle'>
+        <h1>Customized trait object in Rust</h1>
+    </header>
+
+    <section>
+      <p>I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it’s impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library <a target="_blank" rel="noopener" href="https://github.com/Jason5Lee/rust-recur-fn">RecurFn</a>, and I develop a workaround, calling it <strong>customized trait object</strong>.</p>
+<span id="more"></span>
+
+<p>For example, assume we have a trait, <code>Foo</code>.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Foo</span></span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(&amp;<span class="keyword">self</span>, f: <span class="keyword">impl</span> <span class="built_in">Fn</span>() -&gt; ());</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">foo_twice</span></span>(&amp;<span class="keyword">self</span>, f: <span class="keyword">impl</span> <span class="built_in">Fn</span>() -&gt; () + <span class="built_in">Copy</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.foo(f);</span><br><span class="line">        <span class="keyword">self</span>.foo(f)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In which method <code>foo</code> represents a polymorphic action, while method <code>foo_twice</code> represents a static action and should not be overridden.</p>
+<p>This trait cannot be used as a trait object, because both methods have a <code>impl Fn() -&gt; ()</code> parameter. But we can turn it into a trait object in the following way: we can replace <code>impl Fn() -&gt; ()</code> by <code>&amp;dyn Fn() -&gt; ()</code>, and we can statically resolve the method <code>foo_twice</code>.</p>
+<p>So we can create a <em>dynamic</em> version of the trait <code>Foo</code>.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">DynFoo</span></span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">dyn_foo</span></span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="built_in">Fn</span>() -&gt; ());</span><br><span class="line">    <span class="comment">// `foo_twice` does not present because we want it statically resolved.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The trait object <code>dyn DynFoo</code> is the customized trait object. We hope that <code>dyn DynFoo</code> can be treated as the trait object of <code>Foo</code>. We need to implement:</p>
+<ol>
+<li>For any pointer to the implementation of <code>Foo</code>, it can be converted to the pointer to <code>dyn DynFoo</code>.</li>
+<li><code>dyn DynFoo</code> implements <code>Foo</code>.</li>
+</ol>
+<p>For 1, it can be implemented by implements <code>DynFoo</code> for all implementations of <code>Foo</code>.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;F: Foo&gt; DynFoo <span class="keyword">for</span> F &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">dyn_foo</span></span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="keyword">dyn</span> <span class="built_in">Fn</span>() -&gt; ()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.foo(f)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>For 2, it can be implemented by implements <code>Foo</code> for <code>dyn Foo</code>.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> Foo <span class="keyword">for</span> <span class="keyword">dyn</span> DynFoo &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(&amp;<span class="keyword">self</span>, f: <span class="keyword">impl</span> <span class="built_in">Fn</span>() -&gt; ()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.dyn_foo(&amp;f)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Now the following code compiles.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo: &amp;<span class="keyword">dyn</span> DynFoo = &amp;FooImpl::new(); <span class="comment">// FooImpl::new() returns an implementation of Foo.</span></span><br><span class="line">foo.dyn_foo(&amp;|| &#123;&#125;);</span><br><span class="line">foo.foo_twice(&amp;|| &#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>The problem seems to be solved. However, Rust has a weird rule: in <code>impl Foo for dyn DynFoo</code>, <code>DynFoo</code> has <code>&#39;static</code> lifetime, and <code>DynFoo</code> cannot has <code>Send</code> or <code>Sync</code> flag. The following code:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">test_complex</span></span>&lt;<span class="symbol">&#x27;a</span>&gt;() &#123;</span><br><span class="line">    <span class="keyword">let</span> a: <span class="built_in">Box</span>&lt;DynFoo + <span class="built_in">Send</span> + <span class="symbol">&#x27;a</span>&gt; = <span class="built_in">Box</span>::new(FooImpl::new());</span><br><span class="line">    a.foo_twice(&amp;|| &#123;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>cannot compile.</p>
+<p>To solve this problem, we need to make four copies of the code, and change the <code>impl</code> part of each copy into <code>impl&lt;&#39;a&gt; Foo for DynFoo + &#39;a</code>, <code>impl&lt;&#39;a&gt; Foo for DynFoo + &#39;a + Send</code>, <code>impl&lt;&#39;a&gt; Foo for DynFoo + &#39;a + Sync</code>, <code>impl&lt;&#39;a&gt; Foo for DynFoo + &#39;a + Send + Sync</code>.</p>
+<p>To reduce this duplication, we can create a macro to do it.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">macro_rules!</span> impl_dyn_with_markers &#123;</span><br><span class="line">    ($($marker:ident),*) =&gt; &#123;</span><br><span class="line">        <span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; Foo <span class="keyword">for</span> <span class="keyword">dyn</span> DynFoo + <span class="symbol">&#x27;a</span>$( + $marker)* &#123;</span><br><span class="line">            <span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(&amp;<span class="keyword">self</span>, f: <span class="keyword">impl</span> <span class="built_in">Fn</span>() -&gt; ()) &#123;</span><br><span class="line">                <span class="keyword">self</span>.dyn_foo(&amp;f)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line">impl_dyn_with_markers! &#123;&#125;</span><br><span class="line">impl_dyn_with_markers! &#123;<span class="built_in">Send</span>&#125;</span><br><span class="line">impl_dyn_with_markers! &#123;<span class="built_in">Sync</span>&#125;</span><br><span class="line">impl_dyn_with_markers! &#123;<span class="built_in">Send</span>, <span class="built_in">Sync</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can find the example code <a target="_blank" rel="noopener" href="https://github.com/Jason5Lee/learn/blob/master/Rust/src/tests/customized_trait_object.rs">here</a>, this strategy is used in <a target="_blank" rel="noopener" href="https://github.com/Jason5Lee/rust-recur-fn">RecurFn</a>.</p>
+
+
+      
+
+    </section>
+    
+      <section class='ArticleMeta'>
+          <div>
+            发布于&nbsp;
+            <time datetime="2020-01-11T13:03:30.000Z" itemprop="datePublished">
+              2020-01-11
+            </time>
+          </div>
+          
+            <div>
+              tags: 
+  <li class="meta-text">
+  { <a href="/tags/rust/">rust</a> }
+  </li>
+
+  <li class="meta-text">
+  { <a href="/tags/trait/">trait</a> }
+  </li>
+
+  <li class="meta-text">
+  { <a href="/tags/polymorphism/">polymorphism</a> }
+  </li>
+
+
+            </div>
+          
+      </section>
+    
+    
+</article>
+
+  
+</div>
+
+            <footer>
+    <div>© 2021 - Jason Dongheng Lee </div>
+    <div>
+        <span>
+            Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+        </span>
+        ,
+        <span>
+            Theme - <a target="_blank" rel="noopener" href="https://github.com/nameoverflow/hexo-theme-icalm">Icalm</a>
+        </span>
+    </div>
+</footer>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/pager/dist/singlepager.js"></script>
+
+<script>
+var sp = new Pager('data-pager-shell')
+
+</script>
+</body>
+</html>
