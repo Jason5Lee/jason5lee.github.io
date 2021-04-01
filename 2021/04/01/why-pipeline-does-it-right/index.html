@@ -63,55 +63,55 @@
     </header>
 
     <section>
-      <p>When I first learned F#, one of the designs I didn’t understand is that<br>
-in F# you have to use a lot of pipeline operators ( <code>|&gt;</code> ), while in other<br>
-languages you just use dots ( <code>.</code> ). For example, in C# an expression like<br>
-<code>x.Select(n =&gt; ...)</code> , you have to write <code>x |&gt; List.map (fun n -&gt; ...)</code> in F#, which<br>
-looks verbose at the first sight. But after I’ve done more programmings and more<br>
-thinkings, I figured out that the <code>.</code> is being abused in most of the languages and the<br>
+      <p>When I first learned F#, one of the designs I didn’t understand is that
+in F# you have to use a lot of pipeline operators ( <code>|&gt;</code> ), while in other
+languages you just use dots ( <code>.</code> ). For example, in C# an expression like
+<code>x.Select(n =&gt; ...)</code> , you have to write <code>x |&gt; List.map (fun n -&gt; ...)</code> in F#, which
+looks verbose at the first sight. But after I’ve done more programmings and more
+thinkings, I figured out that the <code>.</code> is being abused in most of the languages and the
 pipeline does it right. Here is my thought.</p>
 <span id="more"></span>
 <h2 id="The-problem-of-DAP-dot-abusing-programming">The problem of DAP (dot-abusing programming)<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></h2>
-<p>I used to think that <code>.</code> means <strong>applying</strong> a certain operation to the object. That’s wrong.<br>
+<p>I used to think that <code>.</code> means <strong>applying</strong> a certain operation to the object. That’s wrong.
 <code>.</code> means <strong>providing</strong> a certain operation by the object. The problem of DAP is that it couples the operation provider and the applied object.</p>
-<p>Let’s use dependency-injection as the first example.<br>
-In DAP, dependency injection is considered as a “pattern”.<br>
-When we want to apply an operation to an object, we use <code>obj.operate(args)</code> ,<br>
+<p>Let’s use dependency-injection as the first example.
+In DAP, dependency injection is considered as a “pattern”.
+When we want to apply an operation to an object, we use <code>obj.operate(args)</code> ,
 but if the operation is an injected dependency, we have to rewrite it like <code>dependency.operate(obj, args)</code> . In F#, on the other hand, it’s very natural. We use <code>obj |&gt; Module.operate args</code> , and if we want the operation injected, we just change to <code>obj |&gt; dependency.Operate args</code> , almost identical. The reason behind this is that, in DAP, the operation provider and the applied object are coupled, so if we want the operation provided by a different dependency object, you have to write it in an unusual way that is considered a “pattern”.  But if we decouple those and use the pipeline operator, we can write it like <code>obj |&gt; Module.operate args</code> . Now the operation is provided by the <code>Module</code> instead, and if we want a dependency object as a provider, we just use the object as the provider and write it like <code>obj |&gt; dependency.Operate args</code> .</p>
-<p>My second example is the “decorator pattern”. In DAP, if you want to extend the operations of<br>
-an existing class, we need to create a wrapper class called the “decorator” then define the extended operations as the decorator’s methods. We need the<br>
+<p>My second example is the “decorator pattern”. In DAP, if you want to extend the operations of
+an existing class, we need to create a wrapper class called the “decorator” then define the extended operations as the decorator’s methods. We need the
 decorator pattern in DAP because it couples the operations provider and the applied object, and the decorator class is the one that has both of them. But in F#, we just define it as a function and pipeline to it. Just this simple.</p>
-<p>The main reason that we mistakenly couple the operation provider and the applied object, in my opinion, is that providing an operation that is related to itself is a very common case.<br>
+<p>The main reason that we mistakenly couple the operation provider and the applied object, in my opinion, is that providing an operation that is related to itself is a very common case.
 For example, for a string <code>s</code> , <code>s.Contains(a)</code> should not be interpreted as “applying the operation ‘Contains’ with <code>a</code> as the argument to <code>s</code>”, but “Apply an operation ‘Contains’ provided by <code>s</code> (which returns whether <code>s</code> itself contains a string) to <code>a</code>”. The <code>Contains</code> is resolved by the type of <code>s</code> (at compile time or even at runtime if the method can be overridden). But if we write it as <code>String.contain a s</code> , it now is interpreted as “applying the operation ‘Contains’ provided by <code>String</code> module (currying) to <code>a</code> then to <code>s</code>”. The <code>contain</code> is now resolved by the <code>String</code> module, and the type <code>s</code> and <code>a</code> can be inferred from the method. The difference might be subtle, but we shouldn’t mistakenly consider them as the same and couple them.</p>
 <h2 id="The-problem-of-DAP-in-dynamic-typing-language">The problem of DAP in dynamic-typing language.</h2>
-<p>DAP may cause more troubles in a dynamic-typing language, as in dynamic-typing language, operations provided by an object are hard to be determined statically. If you come from a static-typing language to a dynamic-typing language, you might find that the auto-completion of<br>
+<p>DAP may cause more troubles in a dynamic-typing language, as in dynamic-typing language, operations provided by an object are hard to be determined statically. If you come from a static-typing language to a dynamic-typing language, you might find that the auto-completion of
 the methods doesn’t work as expected, go-to-definition doesn’t work as expected, etc. You might think it’s a problem of dynamic-typing. It’s not true. It’s the problem of DAP.</p>
-<p>If you’ve used Elixir, you might find out that all those features work fine despite being a dynamic-typing language. Because in Elixir,<br>
-we use <code>obj |&gt; Module.operate</code> instead. Auto-completion is easy, just list every function in <code>Module</code>. Goto-definition is easy, just<br>
-go to the <code>operate</code> function in <code>Module</code> . If we decouple the operation provider and the applied object, writing<br>
+<p>If you’ve used Elixir, you might find out that all those features work fine despite being a dynamic-typing language. Because in Elixir,
+we use <code>obj |&gt; Module.operate</code> instead. Auto-completion is easy, just list every function in <code>Module</code>. Goto-definition is easy, just
+go to the <code>operate</code> function in <code>Module</code> . If we decouple the operation provider and the applied object, writing
 dynamic-typing language can be more fun.</p>
 <h2 id="Implicit-Operation-Provider">Implicit Operation Provider</h2>
 <blockquote>
 <p>The problem of implicitness is that you need to assume. ---- Jason5Lee</p>
 </blockquote>
-<p>In some languages like C#, Kotlin, and Scala. They use an “implicit operation provider” mechanism. In C# and Kotlin it’s called extension<br>
+<p>In some languages like C#, Kotlin, and Scala. They use an “implicit operation provider” mechanism. In C# and Kotlin it’s called extension
 function, in Scala it’s called implicit.</p>
-<p>Let’s use C# as the example, in C#, if you import a static class that contains extension methods,<br>
-you can extend extra methods of a class. Calling the extension method on an object is equivalent to using the static class<br>
+<p>Let’s use C# as the example, in C#, if you import a static class that contains extension methods,
+you can extend extra methods of a class. Calling the extension method on an object is equivalent to using the static class
 as the operation provider and the object as the applied object.</p>
 <p>This mechanism does solve the problem, but I don’t really like this approach for the following reasons.</p>
-<p>First, it overloads the <code>.</code> syntax, volatiles the Single Responsible Principle of the language grammar. In these languages, <code>obj.operation</code><br>
-may not only mean &quot;applying the <code>operation</code> provided by <code>obj</code> &quot;, but also mean “applying the <code>operation</code> provided by an implicit<br>
+<p>First, it overloads the <code>.</code> syntax, volatiles the Single Responsible Principle of the language grammar. In these languages, <code>obj.operation</code>
+may not only mean &quot;applying the <code>operation</code> provided by <code>obj</code> &quot;, but also mean “applying the <code>operation</code> provided by an implicit
 static class”.</p>
-<p>Second, explicit itself is better than implicit. In the opening example<br>
-<code>x |&gt; List.map (fun n -&gt; ...)</code> , <code>List</code> is what provides the <code>map</code> operation and <code>x</code> is what the operations apply to. In F#, this version of <code>map</code> is eager (returns a new list immediately). If you want it to be lazy (returns a <code>Seq</code> which will do the mapping when being enumerated) instead, you can change to <code>x |&gt; Seq.map (fun n -&gt;)</code> . In this case, the <code>map</code> operation is provided by a different package <code>Seq</code> , and hence having different behavior. But in C#, you just write <code>obj.Select(n =&gt; ...)</code> . Is it lazy? We <strong>assume</strong> it is as that’s<br>
+<p>Second, explicit itself is better than implicit. In the opening example
+<code>x |&gt; List.map (fun n -&gt; ...)</code> , <code>List</code> is what provides the <code>map</code> operation and <code>x</code> is what the operations apply to. In F#, this version of <code>map</code> is eager (returns a new list immediately). If you want it to be lazy (returns a <code>Seq</code> which will do the mapping when being enumerated) instead, you can change to <code>x |&gt; Seq.map (fun n -&gt;)</code> . In this case, the <code>map</code> operation is provided by a different package <code>Seq</code> , and hence having different behavior. But in C#, you just write <code>obj.Select(n =&gt; ...)</code> . Is it lazy? We <strong>assume</strong> it is as that’s
 how standard Linq library does. The problem is, when there are a lot of 3-party libraries, I’m not sure I’m confident to assume.</p>
 <hr class="footnotes-sep">
 <section class="footnotes">
 <ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>I will avoid using the term “Object-oriented programming”<br>
-because this problem exists in some languages that claim themselves<br>
-“Functional programming language” or “simpler than OO” while it doesn’t exist in<br>
+<li id="fn1" class="footnote-item"><p>I will avoid using the term “Object-oriented programming”
+because this problem exists in some languages that claim themselves
+“Functional programming language” or “simpler than OO” while it doesn’t exist in
 some languages that are considered the “OO done right”. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
 </li>
 </ol>
