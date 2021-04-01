@@ -81,7 +81,7 @@
 <p>Let’s use C# as the example. In C#, if you import a static class that contains extension methods, you can extend extra methods of a class. Calling the extension method on an object is equivalent to using the static class as the operation provider and the object as the applied object.</p>
 <p>This mechanism does solve the problem, but I don’t really like this approach for the following reasons.</p>
 <p>First, it overloads the <code>.</code> syntax, volatiles the Single Responsible Principle of the language grammar. In these languages, <code>obj.operation</code> may not only mean &quot;applying the <code>operation</code> provided by <code>obj</code> &quot;, but also mean “applying the <code>operation</code> provided by an implicit static class”.</p>
-<p>Second, implicit requires assumption. In the opening example <code>x |&gt; List.map (fun n -&gt; ...)</code> , <code>List</code> is what provides the <code>map</code> operation and <code>x</code> is what the operations apply to. In F#, this version of <code>map</code> is eager (returns a new list immediately). If you want it to be lazy (returns a <code>Seq</code> which will do the mapping when being enumerated) instead, you can change to <code>x |&gt; Seq.map (fun n -&gt;)</code> . In this case, the <code>map</code> operation is provided by a different package <code>Seq</code> , and hence having different behavior. But in C#, you just write <code>obj.Select(n =&gt; ...)</code> . Is it lazy? We <strong>assume</strong> it is as that’s how standard Linq library does. The problem is, when there are a lot of 3-party libraries, I’m not sure I’m confident to assume. In fact, Scala is especially known that the programmers have trouble figuring out what “implicit” it is.</p>
+<p>Second, implicit requires assumption. In the opening example <code>x |&gt; List.map (fun n -&gt; ...)</code> , <code>List</code> is what provides the <code>map</code> operation and <code>x</code> is what the operations apply to. In F#, this version of <code>map</code> is eager (returns a new list immediately). If you want it to be lazy (returns a <code>Seq</code> which will do the mapping when being enumerated) instead, you can change to <code>x |&gt; Seq.map (fun n -&gt;)</code> . In this case, the <code>map</code> operation is provided by a different package <code>Seq</code> , and hence having different behavior. But in C#, you just write <code>obj.Select(n =&gt; ...)</code> . Is it lazy? We <strong>assume</strong> it is as that’s how standard Linq library does. The problem is, when there are a lot of 3-party libraries, I’m not sure I’m confident to assume. In fact, Scala is especially known that the programmers have trouble figuring out what “implicit” is.</p>
 <hr class="footnotes-sep">
 <section class="footnotes">
 <ol class="footnotes-list">
@@ -98,7 +98,7 @@
       <section class='ArticleMeta'>
           <div>
             发布于&nbsp;
-            <time datetime="2021-04-01T14:02:37.415Z" itemprop="datePublished">
+            <time datetime="2021-04-01T14:04:48.234Z" itemprop="datePublished">
               2021-04-01
             </time>
           </div>
