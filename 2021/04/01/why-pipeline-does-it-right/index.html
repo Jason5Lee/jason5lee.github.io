@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Why the dot is being abused and why the pipeline does it right. | Jason5Lee&#39;s Personal Blog</title>
+  <title>Why pipeline does it right? | Jason5Lee&#39;s Personal Blog</title>
   
   
   
@@ -59,11 +59,11 @@
             <div>
   <article class='ContentView'>
     <header class='PageTitle'>
-        <h1>Why the dot is being abused and why the pipeline does it right.</h1>
+        <h1>Why pipeline does it right?</h1>
     </header>
 
     <section>
-      <p>When I first learned F#, one of the designs I didn’t understand is that in F# you have to use a lot of pipeline operators ( <code>|&gt;</code> ), while in other languages you just use dots ( <code>.</code> ). For example, in C# an expression like <code>x.Select(n =&gt; ...)</code> , you have to write <code>x |&gt; List.map (fun n -&gt; ...)</code> in F#, which looks verbose at the first sight. But after I’ve done more programmings and more thinkings, I figured out that the <code>.</code> is being abused in most of the languages and the pipeline does it right. Here is my thought.</p>
+      <p>When I first learned F#, one of the designs I didn’t understand is that in F# you have to use a lot of pipeline operators ( <code>|&gt;</code> ), while in other languages you just use dots ( <code>.</code> ). For example, for a C# expression like <code>x.Select(n =&gt; ...)</code> , you have to write <code>x |&gt; List.map (fun n -&gt; ...)</code> in F#, which looks verbose at the first sight. But after I’ve done more programmings and more thinkings, I figured out that the <code>.</code> is being abused in most of the languages and the pipeline does it right. Here is my thought.</p>
 <span id="more"></span>
 <h2 id="The-problem-of-DAP-dot-abusing-programming">The problem of DAP (dot-abusing programming)<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></h2>
 <p>I used to think that <code>.</code> means <strong>applying</strong> a certain operation to the object. That’s wrong. <code>.</code> means <strong>providing</strong> a certain operation by the object. The problem of DAP is that it couples the operation provider and the applied object.</p>
@@ -98,7 +98,7 @@
       <section class='ArticleMeta'>
           <div>
             发布于&nbsp;
-            <time datetime="2021-04-01T13:53:35.735Z" itemprop="datePublished">
+            <time datetime="2021-04-01T14:00:55.404Z" itemprop="datePublished">
               2021-04-01
             </time>
           </div>
