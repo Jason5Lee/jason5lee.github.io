@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='Source+Serif+4':300,300italic,400,400italic,700,700italic%7C'JetBrains+Mono':300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="My Views on Programming Languages">
+<meta property="og:url" content="https://jason5lee.me/2022/08/24/my-views-on-programming-languages/index.html">
+<meta property="og:site_name" content="Jason5Lee Personal Blog">
+<meta property="og:description" content="There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-24T14:29:00.000Z">
+<meta property="article:author" content="Jason5Lee">
+<meta property="article:tag" content="Programming">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jason5lee.me/2022/08/24/my-views-on-programming-languages/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jason5lee.me/2022/08/24/my-views-on-programming-languages/","path":"2022/08/24/my-views-on-programming-languages/","title":"My Views on Programming Languages"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>My Views on Programming Languages | Jason5Lee Personal Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jason5Lee Personal Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-are-we-doing-when-we-program"><span class="nav-number">1.</span> <span class="nav-text">What are we doing when we program?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Defines-a-Good-Programming-Language"><span class="nav-number">2.</span> <span class="nav-text">What Defines a Good Programming Language?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Importance-of-Programming-Languages"><span class="nav-number">3.</span> <span class="nav-text">The Importance of Programming Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Language-Simplicity-versus-Expression-Simplicity"><span class="nav-number">3.1.</span> <span class="nav-text">Language Simplicity versus Expression Simplicity</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-Learn-a-Programming-Language"><span class="nav-number">4.</span> <span class="nav-text">How to Learn a Programming Language?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Understanding-Design-Patterns"><span class="nav-number">5.</span> <span class="nav-text">Understanding Design Patterns</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Acknowledgements"><span class="nav-number">6.</span> <span class="nav-text">Acknowledgements</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jason5Lee</p>
+  <div class="site-description" itemprop="description">Jason5Lee Personal Blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/08/24/my-views-on-programming-languages/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jason5Lee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jason5Lee Personal Blog">
+      <meta itemprop="description" content="Jason5Lee Personal Blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="My Views on Programming Languages | Jason5Lee Personal Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          My Views on Programming Languages
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-08-24 22:29:00" itemprop="dateCreated datePublished" datetime="2022-08-24T22:29:00+08:00">2022-08-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and my understanding of design patterns.</p>
+<span id="more"></span>
+<h2 id="What-are-we-doing-when-we-program">What are we doing when we program?</h2>
+<p>When we program, we are <strong>expressing ideas</strong>. We express them in a programming language to produce code, which can then be turned into a program.</p>
+<p>Let's consider an example. Imagine you wish to create a function to sort data. This might remind you of arranging cards while playing poker. Each time you draw a card, you place it in a particular order. This action ensures the cards in your hand are sorted. Programming is about expressing this idea in a programming language, resulting in code that can sort data.</p>
+<p>In another instance, let's say you aim to develop a service. You have certain ideas about the API protocol, data structure, processing logic, database operations, and more. Programming is the act of expressing these ideas in a programming language, thereby creating code for your service based on these ideas.</p>
+<h2 id="What-Defines-a-Good-Programming-Language">What Defines a Good Programming Language?</h2>
+<p>Since we are expressing ideas when we program, a good programming language should allow for <strong>simple expression</strong>. It should enable me to express my ideas almost as if I'm translating them directly, with the only differences being in word usage and syntax. There should be as few structural alterations as possible. When I read the code, it should clearly reflect what I was thinking when I wrote it.</p>
+<p>Take, for instance, the idea of &quot;User Information&quot;. This term encompasses a user name, a nickname, and an optional birthday. Both the user name and nickname are text, while the birthday is a date. Below are examples of how this idea can be expressed in different programming languages.</p>
+<div class="tabs" id="downloading-next"><ul class="nav-tabs"><li class="tab active"><a href="#downloading-next-1">Kotlin</a></li><li class="tab"><a href="#downloading-next-2">Rust</a></li><li class="tab"><a href="#downloading-next-3">Python</a></li><li class="tab"><a href="#downloading-next-4">TypeScript</a></li></ul><div class="tab-content"><div class="tab-pane active" id="downloading-next-1"><p>Definition:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">UserInfo</span>(</span><br><span class="line">    <span class="keyword">val</span> userName: String,</span><br><span class="line">    <span class="keyword">val</span> nickName: String,</span><br><span class="line">    <span class="keyword">val</span> birthday: Date? = <span class="literal">null</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>To construct user information with only a user name and nickname (no birthday):</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UserInfo(</span><br><span class="line">    userName = <span class="string">&quot;Jason5Lee&quot;</span>,</span><br><span class="line">    nickName = <span class="string">&quot;Jason Lee&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">userInfo.copy(birthday = Date(<span class="number">1997</span>, <span class="number">12</span>, <span class="number">17</span>))</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="downloading-next-2"><p>Definition:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">UserInfo</span> &#123;</span><br><span class="line">    user_name: <span class="type">String</span>,</span><br><span class="line">    nick_name: <span class="type">String</span>,</span><br><span class="line">    birthday: <span class="type">Option</span>&lt;NaiveDate&gt;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>To construct user information with only a user name and nickname (no birthday):</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UserInfo &#123;</span><br><span class="line">    user_name: <span class="string">&quot;Jason5Lee&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    nick_name: <span class="string">&quot;Jason Lee&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    birthday: <span class="literal">None</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UserInfo &#123;</span><br><span class="line">    birthday: <span class="title function_ invoke__">Some</span>(NaiveDate::<span class="title function_ invoke__">from_ymd_opt</span>(<span class="number">1997</span>, <span class="number">12</span>, <span class="number">17</span>).<span class="title function_ invoke__">unwrap</span>()),</span><br><span class="line">    ..user_info</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="downloading-next-3"><p>Definition:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass(<span class="params">frozen=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserInfo</span>:</span><br><span class="line">    user_name: <span class="built_in">str</span></span><br><span class="line">    nick_name: <span class="built_in">str</span></span><br><span class="line">    birthday: <span class="type">Optional</span>[date] = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<p>To construct user information with only a user name and nickname (no birthday):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UserInfo(</span><br><span class="line">    user_name = <span class="string">&quot;Jason5Lee&quot;</span>,</span><br><span class="line">    nick_name = <span class="string">&quot;Jason Lee&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataclasses.replace(userInfo, birthday = date(<span class="number">1997</span>, <span class="number">12</span>, <span class="number">17</span>))</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="downloading-next-4"><p>Definition:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">UserInfo</span> = &#123;</span><br><span class="line">    <span class="keyword">readonly</span> <span class="attr">userName</span>: <span class="built_in">string</span>,</span><br><span class="line">    <span class="keyword">readonly</span> <span class="attr">nickName</span>: <span class="built_in">string</span>,</span><br><span class="line">    <span class="keyword">readonly</span> birthday?: <span class="title class_">Date</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>To construct user information with only a user name and nickname (no birthday):</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">userName</span>: <span class="string">&quot;Jason5Lee&quot;</span>,</span><br><span class="line">    <span class="attr">nickName</span>: <span class="string">&quot;Jason Lee&quot;</span>,</span><br><span class="line">&#125; satisfies <span class="title class_">UserInfo</span></span><br></pre></td></tr></table></figure>
+<p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...userInfo,</span><br><span class="line">    <span class="attr">birthday</span>: <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&quot;1997-12-17&quot;</span>),</span><br><span class="line">&#125; satisfies <span class="title class_">UserInfo</span></span><br></pre></td></tr></table></figure></div></div></div>
+<p>In these languages, expressing &quot;User information&quot; is quite simple. These languages accurately mirror my thought process, with the syntax being the only varying factor. The overall structure remains unchanged; no information is lost.</p>
+<p>However, with certain other programming languages, I either have to forgo this intuitive approach or resort to using design patterns. For instance, in some languages, to construct an object, I must write <code>new UserInfo(&quot;Jason5Lee&quot;, &quot;Jason Lee&quot;, userBirthday)</code>. This requires me to specify values in a predetermined order of fields, which doesn't mirror my thought process, where I identify each value by its field. Reading the code, it's not immediately clear which fields correspond to these three values, which makes it less intuitive.</p>
+<p>I could use the Builder Pattern by defining a new builder class and using it to specify values by fields when constructing the object, but this introduces an additional class that wasn't part of my original thought process.</p>
+<p>The simplicity in expressing ideas in Python, TypeScript, Rust, and Kotlin is the main reason why I prefer these languages.</p>
+<h2 id="The-Importance-of-Programming-Languages">The Importance of Programming Languages</h2>
+<p>Programming languages are more than just tools that allow us to execute commands on a computer. They possess a unique attribute of precision, eliminating ambiguity and enabling concise expression of ideas. Much like how mathematicians use specialized language and notation to accurately depict formulas, programmers utilize programming languages to articulate their thought processes and concepts.</p>
+<p>Pseudocode often serves as an ideal example of this concept. While it's not designed for computer execution, it's an excellent tool for humans to read and understand. It highlights the precision and conciseness that coding language has over natural language. This feature emphasizes the significance of programming languages and the unique value they bring, which is unmatched by other tools such as documentation.</p>
+<p>When using a statically typed languages or a static checking tools like <a target="_blank" rel="noopener" href="https://github.com/microsoft/pyright">Pyright</a>, there's an added advantage. They provide the ability to check for potential errors in our thought processes. This enables a cycle of thought, code, and check, which demands the code to be intuitive and straightforward.</p>
+<h3 id="Language-Simplicity-versus-Expression-Simplicity">Language Simplicity versus Expression Simplicity</h3>
+<p>Simplicity in programming can be viewed from two perspectives: the simplicity of the language itself and the simplicity of expressing using the language. Often, proponents of &quot;simplicity&quot; are referring to the language's simplicity, using it as a rationale to oppose supporting certain features.</p>
+<p>However, the simplicity of expression is equally, if not more, important. It allows ideas to be articulated directly, minimizing the gap between thought and code. This aspect is crucial because the simplicity of a language only impacts the initial learning effort. While a language with numerous features might require more effort to learn, you only need to learn them once.</p>
+<p>If the language is more expressive, the process of writing and reading each piece of code becomes less burdensome. If we consider writing <em>n</em> amount of code requires <em>a</em>n+b* effort, language simplicity primarily reduces <em>b</em>, while expression simplicity reduces <em>a</em>. When <em>n</em> is large enough, it's more beneficial for <em>a</em> to be smaller.</p>
+<p>Naturally, no programming language exists where all ideas can be directly expressed. A surplus of features, especially those susceptible to misuse, could harm expression simplicity. However, the importance of being straightforward often gets overshadowed by the emphasis on language simplicity. This trend needs to change.</p>
+<p>Also, some complexities are inherent and can't be overlooked. Ignoring them only compounds the problem as you'll still need to deal with them, but without representation in the code. For instance, consider the optional birthday field in user information. Many languages lack a way to express optionality. Non-existent values like <code>null</code> or <code>nil</code> can be a valid value for many types, even when they're not supposed to be optional. But that doesn't mean the complexity doesn't exist. You'll still need to consider whether a value is optional or not and how to handle it when it doesn't exist. Without a feature to express optionality, handling this becomes even more challenging. Ignorance is not a strength. Misinterpreting ignorance for simplicity can lead to bigger problems.</p>
+<p>This is why I recommend using statically typed languages, or using type annotations with static checking tools. Every programming language requires a system to define types, as knowing the type of a value is essential for determining how to handle it. If this isn't made clear, it can result in problems.</p>
+<div class="note info"><p>The inability to express optional data is often referred to as <a target="_blank" rel="noopener" href="https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/"><em>The Billion Dollar Mistake</em></a>.</p>
+</div>
+<h2 id="How-to-Learn-a-Programming-Language">How to Learn a Programming Language?</h2>
+<p>The key to learn a programming language, in my perspective, is to understand how to express ideas using that language. Take the <code>if</code> statement, for instance; it enables us to express different code executions based on varying conditions, mirroring the &quot;if&quot; in our cognitive processes. Similarly, Object-Oriented Programming (OOP) utilizes inheritance to express the &quot;is-a&quot; relationship. When one class is a kind of another, inheritance is used to illustrate this relationship. Combined with method overriding, we can express polymorphism, where a single method can have different implementations in various kinds of the same class. To gain a better understanding of how I use these OOP and Functional Programming (FP) features to express my ideas, you can visit <a href="/2022/08/30/my-understanding-of-oop-and-fp/">my blog about OOP and FP</a>.</p>
+<h2 id="Understanding-Design-Patterns">Understanding Design Patterns</h2>
+<p>In some instances, an idea may not be directly expressible in a programming language. In these cases, we resort to creating a specific code pattern, or a design pattern, to articulate the idea. I believe that <strong>a design pattern emerges due to the absence of a corresponding feature</strong>. Many attribute the existence of design patterns to OOP, primarily because the concept was first introduced in a book titled <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>. This has inadvertently led to the misconception that design patterns are unnecessary in non-object-oriented programming languages. However, the truth is that design patterns were created to express ideas that are challenging to communicate using <em>only</em> OOP features. Even in non-OOP languages, a design pattern may be required if the idea is challenging to express directly. The Builder Pattern, for example, is used in certain languages that lack the ability to create objects by specifying the value of each field, a feature unrelated to OOP.</p>
+<p>Consider the Visitor pattern, which expresses that data has multiple variants, each potentially containing different content. The data will be processed differently, accessing different content, based on its variant. The data consists of fixed variants and their content, but the processing remains unpredictable and extendable. To put it simply, the Visitor pattern defines a visitor interface containing the processes for each form. Then, the data provides a polymorphic visit method that accepts a visitor interface parameter. Each variant implements the visit method by invoking the process method for the variant on the visitor interface. This approach not only expresses the data, its variants, and processing but also ensures all variants are covered (since all interface methods must be implemented).</p>
+<p>If a programming language doesn't need the Visitor pattern, it must possess a feature that expresses such data. For example, Kotlin and Scala use the <code>sealed</code> keyword, Rust has an <code>enum</code> feature, and TypeScript and Python's type annotation express it through a union of types. Therefore, in these languages, the Visitor pattern is deemed unnecessary. Otherwise, if a language doesn't have such a feature, the Visitor Pattern is necessary.</p>
+<p>One might argue that they could simply use an interface to represent the data and process each variant using down-casting, thus eliminating the need for the Visitor pattern or the language feature. However, OOP or Java does not prevent this approach, so if one thinks this is a solution, they shouldn't complain that OOP or Java introduces this design pattern. Moreover, this is a prime example of inherent complexity. There will always be concerns about whether the data has fixed variants, what variants the data encompasses, and whether all variants are addressed in processing. Without clear notation for these aspects, it becomes more challenging to handle them correctly.</p>
+<p>When studying design patterns, my advice is to concentrate on what they are trying to express.</p>
+<h2 id="Acknowledgements">Acknowledgements</h2>
+<p>My understanding of programming has been significantly shaped by Scott Wlaschin. He maintains <a target="_blank" rel="noopener" href="https://fsharpforfunandprofit.com/">an F# blog</a> and has authored a book titled <a target="_blank" rel="noopener" href="https://fsharpforfunandprofit.com/books/#domain-modeling-made-functional">&quot;Domain Modeling Made Functional: Tackle Software Complexity with Domain-Driven Design and F#&quot;</a>.</p>
+<p>My understanding has evolved by extrapolating domain modeling into a more generalized idea-expression, incorporating my perspectives on OOP and design patterns. While I have certain preferences differing from Wlaschin's due to our varying viewpoints, his work has played an integral role in shaping my understanding, for which I am deeply grateful.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/paypal.png" alt="Jason5Lee PayPal">
+        <span>PayPal</span>
+      </div>
+      <div>
+        <img src="/images/ethereum.png" alt="Jason5Lee Ethereum">
+        <span>Ethereum</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="Jason5Lee Bitcoin">
+        <span>Bitcoin</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Programming/" rel="tag"># Programming</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/12/telegram-bot-rust-azure-function/" rel="prev" title="Building a Telegram Bot on Azure Function in Rust">
+                  <i class="fa fa-chevron-left"></i> Building a Telegram Bot on Azure Function in Rust
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/30/my-understanding-of-oop-and-fp/" rel="next" title="My understanding of OOP and FP">
+                  My understanding of OOP and FP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason5Lee</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='Source+Serif+4':300,300italic,400,400italic,700,700italic%7C'JetBrains+Mono':300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="As the number of concurrency that the service needs to support is getting higher and higher, technologies such as asynchronous I&#x2F;O, coroutines, and async&#x2F;await are being used increasingly. While these">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Handling Concurrency&amp;#58; Understanding Coroutines, Async&#x2F;Await, Scheduling, and More">
+<meta property="og:url" content="https://jason5lee.me/2023/06/24/coroutines/index.html">
+<meta property="og:site_name" content="Jason5Lee Personal Blog">
+<meta property="og:description" content="As the number of concurrency that the service needs to support is getting higher and higher, technologies such as asynchronous I&#x2F;O, coroutines, and async&#x2F;await are being used increasingly. While these">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-24T11:35:34.000Z">
+<meta property="article:author" content="Jason5Lee">
+<meta property="article:tag" content="Concurrent Programming">
+<meta property="article:tag" content="Coroutines">
+<meta property="article:tag" content="Async&#x2F;Await">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jason5lee.me/2023/06/24/coroutines/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jason5lee.me/2023/06/24/coroutines/","path":"2023/06/24/coroutines/","title":"Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More | Jason5Lee Personal Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jason5Lee Personal Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Fundamental-Idea-of-Coroutines"><span class="nav-number">1.</span> <span class="nav-text">The Fundamental Idea of Coroutines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stackful-and-Stackless-Coroutines"><span class="nav-number">2.</span> <span class="nav-text">Stackful and Stackless Coroutines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Async-Await"><span class="nav-number">3.</span> <span class="nav-text">Async&#x2F;Await</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Yield"><span class="nav-number">4.</span> <span class="nav-text">Yield</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coroutine-Scheduling"><span class="nav-number">5.</span> <span class="nav-text">Coroutine Scheduling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">6.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jason5Lee</p>
+  <div class="site-description" itemprop="description">Jason5Lee Personal Blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2023/06/24/coroutines/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jason5Lee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jason5Lee Personal Blog">
+      <meta itemprop="description" content="Jason5Lee Personal Blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More | Jason5Lee Personal Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-24 19:35:34" itemprop="dateCreated datePublished" datetime="2023-06-24T19:35:34+08:00">2023-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Concurrent-Programming/" itemprop="url" rel="index"><span itemprop="name">Concurrent Programming</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>As the number of concurrency that the service needs to support is getting higher and higher, technologies such as asynchronous I/O, coroutines, and async/await are being used increasingly. While these techniques can increase the amount of concurrency supported by a service, they aren't particularly easy to understand. In this article, I'll share my own understanding of these technologies, hoping to aid your understanding.</p>
+<span id="more"></span>
+<h2 id="The-Fundamental-Idea-of-Coroutines">The Fundamental Idea of Coroutines</h2>
+<p>The operating system represents parallel tasks with threads. A process can include multiple threads. Thus, for tasks that require concurrent handling, such as multiple requests received by a server simultaneously, we can assign a thread to handle each. However, creating and scheduling multiple threads can lead to high system call costs. Even with techniques like thread pooling, if a large amount of concurrency is needed at the same time, the number of threads in the thread pool must also be large, resulting in substantial scheduling costs. To address this issue, an idea was proposed: to implement scheduling in user space rather than relying on the operating system's thread mechanism. If the scheduling process does not involve system calls, scheduling costs will be significantly reduced.</p>
+<p>To implement user-level scheduling, we need our code to be able to &quot;suspend&quot; at specific points. At this time, the thread can execute other code. Later, this code can be resumed by this or another thread. A <strong>coroutine</strong> refers to a code execution that can suspend and resume.</p>
+<p>The async/await mechanism in some programming languages is also closely related to coroutines. I'll introduce this concept from the perspective of coroutines later.</p>
+<p>In concurrent programming, we can represent a concurrent task using a coroutine. It is usually executed by a worker thread or a worker thread pool. Once the coroutine being executed by the worker thread suspends, it switches to another ready but yet-to-start coroutine, allowing the coroutines to be executed concurrently. The worker thread can be built into the programming language or runtime, such as the thread pool built into Go language and C#/.NET, and the main thread of V8. It can also be provided by third-party libraries, such as <code>tokio</code> in Rust language and <code>kotlinx.coroutines</code> in Kotlin.</p>
+<p>Coroutines often use asynchronous I/O. If traditional synchronous I/O is used, the worker thread will block on the I/O and be unable to execute other coroutines. But if asynchronous I/O is used, the coroutine can suspend when the I/O starts, and the worker thread can switch to other coroutines. After the I/O ends, the suspended coroutine will enter a ready state and can be executed by the worker thread.</p>
+<h2 id="Stackful-and-Stackless-Coroutines">Stackful and Stackless Coroutines</h2>
+<p>The key to implementing coroutine mechanism lies in how to suspend and resume. Currently, there are two common types of implementation.</p>
+<p>The first type is known as <strong>stackful coroutines</strong>. In this type, each coroutine has its own stack space. The common implementation of this type uses a strategy similar to operating system thread scheduling: when a coroutine suspends, it saves the current stack register and instruction register values. To resume a suspended coroutine, the stack register is set to the previously saved value and the execution jumps to the point after the suspension. Unlike threads, which are passively suspended by the operating system, coroutines proactively switch themselves out, and the entire process does not require system calls. The Go language and Loom, supported by the recent JRE, use this approach.</p>
+<p>The second type is known as <strong>stackless coroutines</strong>. In this type, the coroutine does not have its own stack space, and there is no need to manipulate the stack register other than performing the normal stack push and pop operations. The common implementation of this type involves creating a state machine for the coroutine. Each suspension position corresponds to a state, and the process of state transition involves executing code from one suspension point to another. The state machine's position mirrors the suspension of the coroutine. The Kotlin language utilizes this approach.</p>
+<p>A limitation of stackless coroutines is the necessity to determine suspension points at the time of coroutine creation, since the states and transitions of the state machine depend on them. Therefore, in Kotlin, functions that can be suspended must be marked. Conversely, stackful coroutines can be suspended at any point during runtime. The disadvantage with stackful coroutines, however, is the need to perform register operations, necessitating special support from the compiler or runtime environment. For example, Java's Loom can only be used in newer versions of the JRE, while Kotlin's coroutine is compatible with environments such as JRE 1.8 and Android runtime.</p>
+<h2 id="Async-Await">Async/Await</h2>
+<p>Several languages, including C#, Rust, JavaScript/TypeScript, and Python, have incorporated the async/await mechanism to facilitate writing code that includes asynchronous operations. These languages use a unique type to represent an ongoing asynchronous operation (represented below by TypeScript's <code>Promise&lt;T&gt;</code>). A function that returns a promise can be marked with <code>async</code>, and within this function, <code>await</code> can be used to &quot;wait&quot; for a <code>Promise&lt;T&gt;</code> object to fulfilled and obtain a result of type <code>T</code>.</p>
+<p>The fundamental behind async/await is actually stackless coroutine. Functions marked with async effectively create a coroutine. When an async function is called, the coroutine runs until the <code>await</code> statement and suspends. Then, a promise is returned. The coroutine resumes when the awaited promise is fulfilled. When the coroutine finishes or throws an uncaught error, the promise returned by the async function resolves or rejects. Under the hood, a state machine is created for async function execution. The awaited promise being fulfilled triggers the state transition.</p>
+<h2 id="Yield">Yield</h2>
+<p>Several languages, including C#, JavaScript/TypeScript, and Python, have incorporated the yield mechanism to generate a sequence. You can use <code>yield</code> in a function to indicate adding an element to the sequence. Compared to directly returning an array, the biggest feature of the <code>yield</code> mechanism is its &quot;laziness&quot;. That is, the code to obtain an element will only be executed when it is needed. When a function containing <code>yield</code> is executed, the function body doesn't immediately execute but suspends at the beginning, and a sequence is returned. Only when the next element of the sequence is acquired, does the function resume until the <code>yield</code> statement. At this point, the function suspends, and the value of <code>yield</code> is returned as the next element of the sequence.</p>
+<p>With the previous examples, you might be able to figure out by yourself that the mechanism of suspension and resumption behind this is also a coroutine. The fundamental behind this feature is also a stackless coroutine. Under the hood, a state machine is created to yield the element. Acquiring the next element triggers the state transition.</p>
+<p>Coroutines, as a mechanism that enables functions to suspend and resume, are not limited to concurrency. This is one scenario of coroutine application. It has other uses, such as calculating deep recursive functions without stack overflow. We won't elaborate on this here.</p>
+<div class="note info"><p>Both <code>yield</code> and <code>async/await</code> are implemented using stackless coroutines. Stackless coroutines need to determine potential suspension positions. For these two features, the suspension positions are the locations of <code>yield</code> or <code>await</code>, which are clear. Therefore, these two features usually use stackless coroutine implementation.</p>
+<p>Since Kotlin natively supports stackless coroutines, both <code>yield</code> and <code>await</code> in Kotlin are functions rather than special syntax.</p>
+</div>
+<h2 id="Coroutine-Scheduling">Coroutine Scheduling</h2>
+<p>As discussed previously, the primary difference between coroutines and threads is that coroutines need to suspend actively. In concurrent scenarios, if a coroutine never suspends, the worker thread would not switch to another coroutine, potentially causing other coroutines to remain in a suspended state for a long duration. This issue often emerges in stackless coroutines as the suspension points of stackless coroutines are predetermined and new temporary suspension points cannot be added based on runtime situations. This issue tends to be even more prevalent in single-threaded worker threads, such as in the V8 engine.</p>
+<p>To prevent this, we can introduce casual suspensions within the coroutine. This suspension is not intended to wait for the completion of an asynchronous operation, but simply to enable the worker thread to switch to another coroutine. In Kotlin, this can be achieved by invoking the <code>yield</code> function.</p>
+<p>In languages that use async/await, we've mentioned that await would suspend execution. Therefore, we can insert an await for a promise that does nothing to prevent a coroutine from occupying the worker thread for too long. Here's an example using JavaScript.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Simulate a 1-second IO operation, and output information after the operation ends.</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">ioTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> <span class="built_in">setTimeout</span>(resolve, <span class="number">1000</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;IO finished&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Simulate a 10-second CPU-intensive task.</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">cpuTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> end = <span class="title class_">Date</span>.<span class="title function_">now</span>() + <span class="number">10000</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="title class_">Date</span>.<span class="title function_">now</span>() &lt; end) &#123;</span><br><span class="line">        <span class="keyword">let</span> x = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">1e7</span>; i++) &#123;</span><br><span class="line">            x = <span class="title class_">Math</span>.<span class="title function_">sqrt</span>(i) + <span class="title class_">Math</span>.<span class="title function_">pow</span>(i, <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">ioTask</span>();</span><br><span class="line"><span class="title function_">cpuTask</span>();</span><br></pre></td></tr></table></figure>
+<p>If you run the above code, &quot;IO finished&quot; will be output only after 10 seconds. This happens because the CPU task takes up the main thread, preventing the IO task from continuing the execution of the output statement after await. To prevent the CPU task from occupying the main thread, we can add an await within the CPU task's loop.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Simulate a 1-second IO operation, and output information after the operation ends.</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">ioTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> <span class="built_in">setTimeout</span>(resolve, <span class="number">1000</span>));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;IO finished&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Simulate a 10-second CPU-intensive task.</span></span><br><span class="line"><span class="comment">// This function has been rewritten as an async function </span></span><br><span class="line"><span class="comment">// because we want it to suspend during execution, </span></span><br><span class="line"><span class="comment">// enabling the main thread to execute other promises.</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">cpuTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> end = <span class="title class_">Date</span>.<span class="title function_">now</span>() + <span class="number">10000</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="title class_">Date</span>.<span class="title function_">now</span>() &lt; end) &#123;</span><br><span class="line">        <span class="keyword">let</span> x = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">1e7</span>; i++) &#123;</span><br><span class="line">            x = <span class="title class_">Math</span>.<span class="title function_">sqrt</span>(i) + <span class="title class_">Math</span>.<span class="title function_">pow</span>(i, <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// The line below allows the CPU task to suspend, </span></span><br><span class="line">        <span class="comment">// so the main thread can execute other promises.</span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">        <span class="comment">// Note: You can&#x27;t simply use `await Promise.resolve();`</span></span><br><span class="line">        <span class="comment">// because awaiting a resolved promise will only</span></span><br><span class="line">        <span class="comment">// add the task to be resumed in the microtask queue,</span></span><br><span class="line">        <span class="comment">// which will execute in the current phase of the event loop.</span></span><br><span class="line">        <span class="comment">// Only by using `setImmediate` can the other phases of the event loop</span></span><br><span class="line">        <span class="comment">// be performed after suspending the promise.</span></span><br><span class="line">        <span class="comment">// This allows the event loop to handle IO events.</span></span><br><span class="line">        <span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> <span class="title function_">setImmediate</span>(resolve));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">ioTask</span>();</span><br><span class="line"><span class="title function_">cpuTask</span>();</span><br></pre></td></tr></table></figure>
+<p>After the above modifications, &quot;IO finished&quot; can be output approximately one second later.</p>
+<h2 id="Summary">Summary</h2>
+<p>This blog explains the concepts related to concurrent programming, including coroutines and async/await. It shows the benefits of coroutines in managing concurrent tasks and details stackful and stackless coroutines. It explores further how async/await and yield, derived from coroutines, work. The article then stresses the necessity of suspending coroutines in concurrent situations. Through JavaScript examples, it shows potential issues and advises incorporating an 'await' in CPU-heavy tasks to facilitate other tasks such as I/O operations.</p>
+<p>Here are the key points:</p>
+<ol>
+<li>Coroutines provide a cost-effective method for managing concurrent tasks by allowing code execution to be suspended and resumed.</li>
+<li>Asynchronous I/O and coroutines combine to prevent worker thread blockage.</li>
+<li>Stackful coroutines can suspend at any time, while stackless coroutines are implemented as state machines.</li>
+<li>Async/await and yield mechanisms, implemented in many languages, are based on stackless coroutines.</li>
+<li>In concurrent scenarios, coroutines need to actively suspend to allow worker thread switching.</li>
+<li>The insertion of <code>await</code> within a coroutine can enable the worker thread to switch to another coroutine.</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/paypal.png" alt="Jason5Lee PayPal">
+        <span>PayPal</span>
+      </div>
+      <div>
+        <img src="/images/ethereum.png" alt="Jason5Lee Ethereum">
+        <span>Ethereum</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="Jason5Lee Bitcoin">
+        <span>Bitcoin</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Concurrent-Programming/" rel="tag"># Concurrent Programming</a>
+              <a href="/tags/Coroutines/" rel="tag"># Coroutines</a>
+              <a href="/tags/Async-Await/" rel="tag"># Async/Await</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/30/my-understanding-of-oop-and-fp/" rel="prev" title="My understanding of OOP and FP">
+                  <i class="fa fa-chevron-left"></i> My understanding of OOP and FP
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason5Lee</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

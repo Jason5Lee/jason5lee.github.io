@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='Source+Serif+4':300,300italic,400,400italic,700,700italic%7C'JetBrains+Mono':300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In this tutorial, I&#39;ll go through the process of building a telegram bot in Rust, hosted in Azure Function. As an example, we build a bot to randomly pick a line from the message to help you, for exam">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building a Telegram Bot on Azure Function in Rust">
+<meta property="og:url" content="https://jason5lee.me/2022/04/12/telegram-bot-rust-azure-function/index.html">
+<meta property="og:site_name" content="Jason5Lee Personal Blog">
+<meta property="og:description" content="In this tutorial, I&#39;ll go through the process of building a telegram bot in Rust, hosted in Azure Function. As an example, we build a bot to randomly pick a line from the message to help you, for exam">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/create-new-project.png">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/functions-sign-into-azure.png">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/function-app-publish-project.png">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/functions-vscode-create-azure-advanced.png">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/get-publish-profile.png">
+<meta property="og:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/function-configuration.png">
+<meta property="article:published_time" content="2022-04-12T09:59:53.000Z">
+<meta property="article:author" content="Jason5Lee">
+<meta property="article:tag" content="rust">
+<meta property="article:tag" content="telegram-bot">
+<meta property="article:tag" content="azure-function">
+<meta property="article:tag" content="serverless">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jason5lee.me/images/telegram-bot-rust-azure-function/create-new-project.png">
+
+
+<link rel="canonical" href="https://jason5lee.me/2022/04/12/telegram-bot-rust-azure-function/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jason5lee.me/2022/04/12/telegram-bot-rust-azure-function/","path":"2022/04/12/telegram-bot-rust-azure-function/","title":"Building a Telegram Bot on Azure Function in Rust"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Building a Telegram Bot on Azure Function in Rust | Jason5Lee Personal Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jason5Lee Personal Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Serverless"><span class="nav-number">1.</span> <span class="nav-text">Why Serverless</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Rust"><span class="nav-number">2.</span> <span class="nav-text">Why Rust</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prepare"><span class="nav-number">3.</span> <span class="nav-text">Prepare</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Create-the-project"><span class="nav-number">4.</span> <span class="nav-text">Create the project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implements-the-API"><span class="nav-number">5.</span> <span class="nav-text">Implements the API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Local-Testing"><span class="nav-number">6.</span> <span class="nav-text">Local Testing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Publish"><span class="nav-number">7.</span> <span class="nav-text">Publish</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jason5Lee</p>
+  <div class="site-description" itemprop="description">Jason5Lee Personal Blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/04/12/telegram-bot-rust-azure-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jason5Lee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jason5Lee Personal Blog">
+      <meta itemprop="description" content="Jason5Lee Personal Blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Building a Telegram Bot on Azure Function in Rust | Jason5Lee Personal Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Building a Telegram Bot on Azure Function in Rust
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-04-12 17:59:53" itemprop="dateCreated datePublished" datetime="2022-04-12T17:59:53+08:00">2022-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In this tutorial, I'll go through the process of building a telegram bot in Rust, hosted in Azure Function. As an example, we build a bot to randomly pick a line from the message to help you, for example, decide what to eat for dinner.</p>
+<span id="more"></span>
+<h2 id="Why-Serverless">Why Serverless</h2>
+<p>Azure Function is a serverless service. Unlike most of the service which charges according to the time your service is running, serverless charges for the time when you're actually processing an request. It's very suitable for the service that is called infrequently, for example, a personal Telegram Bot that only be used several times a day.</p>
+<h2 id="Why-Rust">Why Rust</h2>
+<p>Besides that I love this language, Rust is also a perfect match for serverless. Serverless is charged by the duration the request is handled and the memory used in this duration. Rust is very efficient and the memory usage is very small.</p>
+<h2 id="Prepare">Prepare</h2>
+<ul>
+<li>
+<p>An Azure account.</p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/">Visual Studio Code</a></p>
+</li>
+<li>
+<p>The <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions">Azure Functions extension</a> for Visual Studio Code.</p>
+</li>
+<li>
+<p>The <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v3">Azure Functions Core Tools</a> version 3.x. Use the <code>func --version</code> command to check that it is correctly installed.</p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://www.rust-lang.org/tools/install">rustup</a> and a Rust development environment.</p>
+</li>
+<li>
+<p>A GitHub account if you want to use GitHub Action to deploy the bot.</p>
+</li>
+<li>
+<p>A telegram bot. You can create it via <a target="_blank" rel="noopener" href="https://core.telegram.org/bots#6-botfather">BotFather</a>. Make sure to keep the token.</p>
+</li>
+<li>
+<p><a target="_blank" rel="noopener" href="https://ngrok.com/">ngrok</a> for local testing.</p>
+</li>
+</ul>
+<h2 id="Create-the-project">Create the project</h2>
+<ol>
+<li>
+<p>Open VSCode.</p>
+</li>
+<li>
+<p>Choose the Azure icon in the Activity bar, then in the <strong>Azure: Functions</strong> area, select the <strong>Create new project...</strong> icon.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/create-new-project.png" alt=""></p>
+</li>
+<li>
+<p>Choose a directory location for your project workspace and choose <strong>Select</strong>.</p>
+</li>
+<li>
+<p>Provide the following information at the prompts:</p>
+<ul>
+<li>
+<p><strong>Select a language for your function project</strong>: Choose <code>Custom</code>.</p>
+</li>
+<li>
+<p><strong>Select a template for your project's first function</strong>: Choose <code>HTTP trigger</code>.</p>
+</li>
+<li>
+<p><strong>Provide a function name</strong>: In this example, we use <code>pick-bot-func</code> as the function name.</p>
+</li>
+<li>
+<p><strong>Authorization level</strong>: Choose <code>Anonymous</code>.</p>
+</li>
+<li>
+<p><strong>Select how you would like to open your project</strong>: Choose <code>Open in current window</code>.</p>
+</li>
+</ul>
+<p>VSCode will create the project and open it.</p>
+</li>
+<li>
+<p>After the project is open, open the terminal from VSCode (or manually <code>cd</code> into the project), initialize a Rust project named <code>handler</code>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo init --name handler</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>In <code>.gitignore</code>, add <code>handler</code> and <code>handler.exe</code>.</p>
+</li>
+<li>
+<p>Open <em>host.json</em>.</p>
+<ul>
+<li>In the <code>customHandler.description</code> section, set the value of <code>defaultExecutablePath</code> to the binary name <code>handler</code> (on Windows, set it to <code>handler.exe</code>).</li>
+<li>In the <code>customHandler</code> section, add a property named <code>enableForwardingHttpRequest</code> and set its value to true.</li>
+</ul>
+</li>
+</ol>
+<h2 id="Implements-the-API">Implements the API</h2>
+<ol>
+<li>
+<p>Open the project in your prefered editor/IDE if it is not VSCode. Note that you need this VSCode window latter for publishing.</p>
+</li>
+<li>
+<p>In <em>Cargo.toml</em>, add the following dependencies. This example uses <code>actix-web</code> framework.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup></p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">teloxide</span> = &#123; version = <span class="string">&quot;0.7&quot;</span>, default-features = <span class="literal">false</span>, features = [<span class="string">&quot;macros&quot;</span>, <span class="string">&quot;auto-send&quot;</span>, <span class="string">&quot;rustls&quot;</span>] &#125;</span><br><span class="line"><span class="attr">log</span> = <span class="string">&quot;0.4&quot;</span></span><br><span class="line"><span class="attr">actix-web</span> = <span class="string">&quot;4&quot;</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">&quot;2.2&quot;</span></span><br><span class="line"><span class="attr">anyhow</span> = <span class="string">&quot;1.0&quot;</span></span><br><span class="line"><span class="attr">serde</span> = &#123; version = <span class="string">&quot;1.0&quot;</span>, features = [<span class="string">&quot;derive&quot;</span>] &#125;</span><br><span class="line"><span class="attr">serde_json</span> = <span class="string">&quot;1.0&quot;</span></span><br><span class="line"><span class="attr">getrandom</span> = <span class="string">&quot;0.2&quot;</span></span><br><span class="line"><span class="attr">afch-logger</span> = <span class="string">&quot;0.2&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>Here is an example implementation of <code>src/main.rs</code>.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> actix_web::post;</span><br><span class="line"><span class="keyword">use</span> actix_web::Responder;</span><br><span class="line"><span class="keyword">use</span> actix_web::&#123;web, App, HttpResponse, HttpServer&#125;;</span><br><span class="line"><span class="keyword">use</span> std::env;</span><br><span class="line"><span class="keyword">use</span> std::future::Future;</span><br><span class="line"><span class="keyword">use</span> std::net::Ipv4Addr;</span><br><span class="line"><span class="keyword">use</span> teloxide::adaptors::AutoSend;</span><br><span class="line"><span class="keyword">use</span> teloxide::requests::&#123;Requester, RequesterExt&#125;;</span><br><span class="line"><span class="keyword">use</span> teloxide::types::Update;</span><br><span class="line"><span class="keyword">use</span> teloxide::types::&#123;MediaKind, MessageKind, UpdateKind&#125;;</span><br><span class="line"><span class="keyword">use</span> teloxide::Bot;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">rand_u64</span>() <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">u64</span>, getrandom::Error&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">bytes</span> = [<span class="number">0u8</span>; <span class="number">8</span>];</span><br><span class="line">    getrandom::<span class="title function_ invoke__">getrandom</span>(&amp;<span class="keyword">mut</span> bytes)?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(<span class="type">u64</span>::<span class="title function_ invoke__">from_le_bytes</span>(bytes))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">pick</span>&lt;T&gt;(items: &amp;[T]) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;&amp;T, getrandom::Error&gt; &#123;</span><br><span class="line">    <span class="comment">// Not mathmatically with the same possibility, but good enough for our purposes</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">index</span> = <span class="title function_ invoke__">rand_u64</span>()? % items.<span class="title function_ invoke__">len</span>() <span class="keyword">as</span> <span class="type">u64</span>;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(&amp;items[index <span class="keyword">as</span> <span class="type">usize</span>])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Log the error and simply return a 500</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">fn</span> <span class="title function_">run_api</span>(block: <span class="keyword">impl</span> <span class="title class_">Future</span>&lt;Output = anyhow::<span class="type">Result</span>&lt;HttpResponse&gt;&gt;) <span class="punctuation">-&gt;</span> HttpResponse &#123;</span><br><span class="line">    <span class="keyword">match</span> block.<span class="keyword">await</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(res) =&gt; res,</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(err) =&gt; &#123;</span><br><span class="line">            log::error!(<span class="string">&quot;&#123;&#125;&quot;</span>, err);</span><br><span class="line">            HttpResponse::<span class="title function_ invoke__">InternalServerError</span>().<span class="title function_ invoke__">body</span>(<span class="string">&quot;Internal Server Error&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// The `pick-bot-func` should be the function name.</span></span><br><span class="line"><span class="meta">#[post(<span class="string">&quot;/api/pick-bot-func&quot;</span>)]</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">fn</span> <span class="title function_">setup</span>(body: web::Json&lt;Update&gt;, bot: web::Data&lt;AutoSend&lt;Bot&gt;&gt;) <span class="punctuation">-&gt;</span> <span class="keyword">impl</span> <span class="title class_">Responder</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">run_api</span>(<span class="keyword">async</span> <span class="keyword">move</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">update</span> = body.<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">UpdateKind</span>::<span class="title function_ invoke__">Message</span>(message) = update.kind &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">chat_id</span> = message.chat.id;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">MessageKind</span>::<span class="title function_ invoke__">Common</span>(message) = message.kind &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">MediaKind</span>::<span class="title function_ invoke__">Text</span>(text) = message.media_kind &#123;</span><br><span class="line">                    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(content) = text.text.<span class="title function_ invoke__">strip_prefix</span>(<span class="string">&quot;/pick&quot;</span>) &#123;</span><br><span class="line">                        <span class="keyword">let</span> <span class="variable">selections</span>: <span class="type">Vec</span>&lt;&amp;<span class="type">str</span>&gt; = content</span><br><span class="line">                            .<span class="title function_ invoke__">lines</span>()</span><br><span class="line">                            .<span class="title function_ invoke__">filter</span>(|line| !line.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">is_empty</span>())</span><br><span class="line">                            .<span class="title function_ invoke__">collect</span>();</span><br><span class="line">                        log::info!(<span class="string">&quot;selections: &#123;:?&#125;&quot;</span>, selections);</span><br><span class="line">                        <span class="keyword">if</span> selections.<span class="title function_ invoke__">is_empty</span>() &#123;</span><br><span class="line">                            bot.<span class="title function_ invoke__">send_message</span>(chat_id, <span class="string">&quot;Error: Message is empty or blank.&quot;</span>)</span><br><span class="line">                                .<span class="keyword">await</span>?;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            bot.<span class="title function_ invoke__">send_message</span>(chat_id, *<span class="title function_ invoke__">pick</span>(&amp;selections)?).<span class="keyword">await</span>?;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        bot.<span class="title function_ invoke__">send_message</span>(chat_id, <span class="string">&quot;Error: Message is not a /pick command.&quot;</span>)</span><br><span class="line">                            .<span class="keyword">await</span>?;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(HttpResponse::<span class="title function_ invoke__">Ok</span>().<span class="title function_ invoke__">finish</span>())</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="keyword">await</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[actix_web::main]</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">fn</span> <span class="title function_">main</span>() <span class="punctuation">-&gt;</span> anyhow::<span class="type">Result</span>&lt;()&gt; &#123;</span><br><span class="line">    afch_logger::<span class="title function_ invoke__">init</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">port_key</span> = <span class="string">&quot;FUNCTIONS_CUSTOMHANDLER_PORT&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">port</span>: <span class="type">u16</span> = <span class="keyword">match</span> env::<span class="title function_ invoke__">var</span>(port_key) &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(val) =&gt; val.<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Custom Handler port is not a number!&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(_) =&gt; <span class="number">3000</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">bot</span> = Bot::<span class="title function_ invoke__">from_env</span>().<span class="title function_ invoke__">auto_send</span>();</span><br><span class="line"></span><br><span class="line">    log::info!(<span class="string">&quot;Starting server on port &#123;&#125;&quot;</span>, port);</span><br><span class="line">    HttpServer::<span class="title function_ invoke__">new</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">        App::<span class="title function_ invoke__">new</span>()</span><br><span class="line">            .<span class="title function_ invoke__">app_data</span>(web::Data::<span class="title function_ invoke__">new</span>(bot.<span class="title function_ invoke__">clone</span>()))</span><br><span class="line">            .<span class="title function_ invoke__">service</span>(setup)</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_ invoke__">bind</span>((Ipv4Addr::UNSPECIFIED, port))?</span><br><span class="line">    .<span class="title function_ invoke__">run</span>()</span><br><span class="line">    .<span class="keyword">await</span>?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>The key point is to handle the POST request of <code>api/&lt;function name&gt;</code> endpoint.</p>
+<h2 id="Local-Testing">Local Testing</h2>
+<p>Before testing, you need to configure the environment. Open <em>local.settings.json</em>, in the <code>Values</code> section.</p>
+<ul>
+<li>Add a property named <code>TELOXIDE_TOKEN</code> and set its value to your Telegram Bot token.</li>
+<li>If you have any other config that read from environment variable, configure it in this section.</li>
+</ul>
+<p>After you have configured, follow the following steps to test it locally.</p>
+<ol>
+<li>
+<p>Build the project and copy the binary to project root.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo build</span><br><span class="line">cp target/debug/handler .</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>Run <code>func start</code> to run the azure function locally. When the function is setup, you can find the listening port in the output.</p>
+</li>
+<li>
+<p>In another terminal, run <code>ngrok http &lt;Function listening port&gt;</code>. After <code>ngrok</code> is setup, you can find the URL in the output.</p>
+</li>
+<li>
+<p>Open the following URL in your browser (or <code>curl -L</code>).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">api.telegram.org/bot&lt;Telegram Bot Token&gt;/setwebhook?url=&lt;ngrok URL&gt;/api/&lt;function name, `pick-bot-func` in this example&gt;</span><br></pre></td></tr></table></figure>
+<p>If you see the <code>Webhook was set</code> response, you have setup the webhook.</p>
+</li>
+<li>
+<p>Try to send a message to telegram bot. You should get the response.</p>
+</li>
+</ol>
+<h2 id="Publish">Publish</h2>
+<p>In order to publish the function to Azure Function, you need to compile into a Linux executable, better to be <code>musl</code> to avoid glibc version issue. Because the <code>teloxide</code> depends on some libraries that makes cross-compiling tricky, here you can consider using GitHub Action for compiling and publishing.</p>
+<p>First we need to publish our function from VSCode so that required resource is created. Note that the function won't work yet because it requires a Linux executable.</p>
+<ol>
+<li>
+<p>If you are using Windows, change the <code>defaultExecutablePath</code> in <em>host.json</em> from <code>handler.exe</code> to <code>handler</code>. This instructs the function app to run the Linux binary.</p>
+</li>
+<li>
+<p>Add <code>target</code> to <code>.funcignore</code> file.</p>
+</li>
+<li>
+<p>If you aren't already signed in, choose the Azure icon in the Activity bar, then in the <strong>Azure: Functions</strong> area, choose <strong>Sign in to Azure...</strong>.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/functions-sign-into-azure.png" alt=""></p>
+<p>When prompted in the browser, choose your Azure account and sign in using your Azure account credentials.</p>
+<p>After you've successfully signed in, you can close the new<br>
+browser window.</p>
+</li>
+<li>
+<p>Choose the Azure icon in the Activity bar, then in the <strong>Azure: Functions</strong> area, choose the <strong>Deploy to function app...</strong> button.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/function-app-publish-project.png" alt=""></p>
+</li>
+<li>
+<p>Provide the following information at the prompts:</p>
+<ul>
+<li>
+<p><strong>Select subscription</strong>: Choose the subscription to use. You won't see this if you only have one subscription.</p>
+</li>
+<li>
+<p><strong>Select Function App in Azure</strong>: Choose <code>+ Create new Function App (advanced)</code>.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/functions-vscode-create-azure-advanced.png" alt=""></p>
+</li>
+<li>
+<p><strong>Enter a globally unique name for the function app</strong>: Type a name that is valid in a URL path. The name you type is validated to make sure that it's unique in Azure Functions.</p>
+</li>
+<li>
+<p><strong>Select a runtime stack</strong>: Choose <code>Custom Handler</code>.</p>
+</li>
+<li>
+<p><strong>Select an OS</strong>: Choose <code>Linux</code>.</p>
+</li>
+<li>
+<p><strong>Select a hosting plan</strong>: Choose <code>Consumption</code>.</p>
+</li>
+<li>
+<p><strong>Select a resource group</strong>: Choose <code>+ Create new resource group</code>.<br>
+Enter a name for the resource group. This name must be unique within<br>
+your Azure subscription. You can use the name suggested in the prompt.</p>
+</li>
+<li>
+<p><strong>Select a storage account</strong>: Choose <code>+ Create new storage account</code>. This name must be globally unique within Azure. You can use the name suggested in the prompt.</p>
+</li>
+<li>
+<p><strong>Select an Application Insights resource</strong>: Choose <code>+ Create Application Insights resource</code>. This name must be globally unique within Azure. You can use the name suggested in the prompt.</p>
+</li>
+<li>
+<p><strong>Select a location for new resources</strong>: For better performance, choose a <a target="_blank" rel="noopener" href="https://azure.microsoft.com/regions/">region</a> near you.The extension shows the status of individual resources as they are being created in Azure in the notification area.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Find your newly created function under <a target="_blank" rel="noopener" href="https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Web%2Fsites/kind/functionapp">Azure Portal</a>, then click it.</p>
+</li>
+<li>
+<p>Click <strong>Get publish profile</strong> to download the profile which will be used latter.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/get-publish-profile.png" alt=""></p>
+</li>
+<li>
+<p>In ths settings, click <strong>Configuration</strong>.</p>
+<p><img src="/images/telegram-bot-rust-azure-function/function-configuration.png" alt=""></p>
+<ul>
+<li>
+<p>Delete <code>WEBSITE_RUN_FROM_PACKAGE</code>.</p>
+</li>
+<li>
+<p>Click <strong>New application setting</strong>, enter <code>WEBSITE_MOUNT_ENABLED</code> as <strong>Name</strong> and <code>0</code> as <strong>Value</strong>, click <strong>Ok</strong>. <sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup></p>
+</li>
+<li>
+<p>Click <strong>New application setting</strong>, enter <code>TELOXIDE_TOKEN</code> as <strong>Name</strong> and the Telegram Bot token as <strong>Value</strong>, click <strong>Ok</strong>.</p>
+</li>
+<li>
+<p>If you have other configurations via environment variable, set it here.</p>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>After the steps above, you have prepared the function resources. Now you can publish the function through GitHub Action.</p>
+<ol>
+<li>
+<p>Create a GitHub Repo.</p>
+</li>
+<li>
+<p>Go to Settings &gt; Secrets &gt; Action.</p>
+</li>
+<li>
+<p>Click <strong>New repository secret</strong>, enter <code>AZURE_FUNCTIONAPP_PUBLISH_PROFILE</code> as <strong>Name</strong>, the content of the publish profile file you downloaded before as <strong>Value</strong>, click <strong>Add secret</strong>.</p>
+</li>
+<li>
+<p>Click <strong>New repository secret</strong>, enter <code>AZURE_APP_NAME</code> as <strong>Name</strong>, the function app name as the value <sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>, click <strong>Add secret</strong>.</p>
+</li>
+<li>
+<p>Add the following content in <code>.github/workflows/release.yml</code> file.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Build</span> <span class="string">and</span> <span class="string">Release</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="string">push</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">release:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">to</span> <span class="string">Azure</span> <span class="string">Function</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-20.04</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">|</span> <span class="string">Checkout</span> <span class="string">code</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">|</span> <span class="string">Rust</span> <span class="string">toolchain</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions-rs/toolchain@v1</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">toolchain:</span> <span class="string">stable</span></span><br><span class="line">          <span class="attr">profile:</span> <span class="string">minimal</span></span><br><span class="line">          <span class="attr">target:</span> <span class="string">x86_64-unknown-linux-musl</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">cargo-cache</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">Cache</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">Swatinem/rust-cache@v1</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">key:</span> <span class="string">release-azure-function</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">|</span> <span class="string">musl</span> <span class="string">tools</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">sudo</span> <span class="string">apt</span> <span class="string">install</span> <span class="string">-y</span> <span class="string">musl-tools</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Build</span> <span class="string">|</span> <span class="string">Tests</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">cargo</span> <span class="string">test</span> <span class="string">--release</span> <span class="string">--target</span> <span class="string">x86_64-unknown-linux-musl</span> <span class="string">--</span> <span class="string">--nocapture</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Build</span> <span class="string">|</span> <span class="string">Build</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">cargo</span> <span class="string">build</span> <span class="string">--release</span> <span class="string">--target</span> <span class="string">x86_64-unknown-linux-musl</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">|</span> <span class="string">Move</span> <span class="string">binary</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">mv</span> <span class="string">./target/x86_64-unknown-linux-musl/release/handler</span> <span class="string">.</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">|</span> <span class="string">Azure</span> <span class="string">Function</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">Azure/functions-action@v1</span></span><br><span class="line">        <span class="attr">id:</span> <span class="string">fa</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">app-name:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.AZURE_APP_NAME</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          <span class="attr">package:</span> <span class="string">.</span></span><br><span class="line">          <span class="attr">publish-profile:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          <span class="attr">respect-funcignore:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>Push the code to the GitHub Repo, wait for the GitHub Action finish.</p>
+</li>
+<li>
+<p>At the azure function page, copy the URL.</p>
+</li>
+<li>
+<p>Open the following URL in your browser (or <code>curl -L</code>): <code>api.telegram.org/bot&lt;Telegram Bot Token&gt;/setwebhook?url=&lt;Azure Function URL&gt;/api/&lt;function name, pick-bot-func in this example&gt;</code>. If you see the <code>Webhook was set</code> response, you have setup the webhook.</p>
+</li>
+</ol>
+<p>Now you're Telegram Bot is hosted in Azure Function!</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>We disable the default feature of <code>teloxide</code> so that <code>openssl</code> won't be a dependency, which is tricky to be cross-compiled to musl even under Linux. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>The <code>afch-logger</code> is a logger implementation that uses some tricks to get expected log level on Azure. Check <a target="_blank" rel="noopener" href="https://github.com/Jason5Lee/afch-logger">the repo</a> for details. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>The two steps above are to workaround <a target="_blank" rel="noopener" href="https://github.com/Azure/functions-action/issues/81">Azure/functions-action/issues/81</a>. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p>Note: this is NOT the function name. It's the app name you entered at step 5 of publishing function from VSCode. <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/paypal.png" alt="Jason5Lee PayPal">
+        <span>PayPal</span>
+      </div>
+      <div>
+        <img src="/images/ethereum.png" alt="Jason5Lee Ethereum">
+        <span>Ethereum</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="Jason5Lee Bitcoin">
+        <span>Bitcoin</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/rust/" rel="tag"># rust</a>
+              <a href="/tags/telegram-bot/" rel="tag"># telegram-bot</a>
+              <a href="/tags/azure-function/" rel="tag"># azure-function</a>
+              <a href="/tags/serverless/" rel="tag"># serverless</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/11/rust-exception-async/" rel="prev" title="Simulate exception in async Rust">
+                  <i class="fa fa-chevron-left"></i> Simulate exception in async Rust
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/24/my-views-on-programming-languages/" rel="next" title="My Views on Programming Languages">
+                  My Views on Programming Languages <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason5Lee</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

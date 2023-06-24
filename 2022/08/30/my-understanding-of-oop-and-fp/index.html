@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='Source+Serif+4':300,300italic,400,400italic,700,700italic%7C'JetBrains+Mono':300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In my previous article, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="My understanding of OOP and FP">
+<meta property="og:url" content="https://jason5lee.me/2022/08/30/my-understanding-of-oop-and-fp/index.html">
+<meta property="og:site_name" content="Jason5Lee Personal Blog">
+<meta property="og:description" content="In my previous article, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-30T14:56:00.000Z">
+<meta property="article:author" content="Jason5Lee">
+<meta property="article:tag" content="Programming">
+<meta property="article:tag" content="FP">
+<meta property="article:tag" content="OOP">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jason5lee.me/2022/08/30/my-understanding-of-oop-and-fp/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jason5lee.me/2022/08/30/my-understanding-of-oop-and-fp/","path":"2022/08/30/my-understanding-of-oop-and-fp/","title":"My understanding of OOP and FP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>My understanding of OOP and FP | Jason5Lee Personal Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jason5Lee Personal Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encapsulation-and-Polymorphism"><span class="nav-number">1.</span> <span class="nav-text">Encapsulation and Polymorphism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OOP"><span class="nav-number">2.</span> <span class="nav-text">OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FP"><span class="nav-number">3.</span> <span class="nav-text">FP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-and-Null-Values"><span class="nav-number">3.1.</span> <span class="nav-text">Optional and Null Values</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Higher-order-Functions-and-Actions"><span class="nav-number">3.2.</span> <span class="nav-text">Higher-order Functions and Actions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Immutability"><span class="nav-number">3.3.</span> <span class="nav-text">Immutability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Record"><span class="nav-number">3.4.</span> <span class="nav-text">Record</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Newtype"><span class="nav-number">3.5.</span> <span class="nav-text">Newtype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Algebraic-Data-Types"><span class="nav-number">3.6.</span> <span class="nav-text">Algebraic Data Types</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jason5Lee</p>
+  <div class="site-description" itemprop="description">Jason5Lee Personal Blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/08/30/my-understanding-of-oop-and-fp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jason5Lee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jason5Lee Personal Blog">
+      <meta itemprop="description" content="Jason5Lee Personal Blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="My understanding of OOP and FP | Jason5Lee Personal Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          My understanding of OOP and FP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-08-30 22:56:00" itemprop="dateCreated datePublished" datetime="2022-08-30T22:56:00+08:00">2022-08-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In my <a href="/2022/08/24/my-views-on-programming-languages/">previous article</a>, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.</p>
+<p>To summarize briefly: OOP is used to express ideas about universal objects, whereas functional programming primarily focuses on specific types of objects.</p>
+<span id="more"></span>
+<h2 id="Encapsulation-and-Polymorphism">Encapsulation and Polymorphism</h2>
+<p>Before we delve into OOP and FP, let's first talk about my understanding of encapsulation and polymorphism. These terms frequently appear in discussions about OOP and occasionally in FP. They might seem unusual at first, but they are tied to two elementary notions: the <em>what</em> and the <em>how</em>.</p>
+<p><strong>Encapsulation</strong> is designed to separate <em>how</em> from <em>what</em>. This separation allows users to focus solely on the <em>what</em>, while the <em>how</em> becomes irrelevant to them. Let's consider a function as an example. The function's signature informs us about its purpose, the <em>what</em>, whereas the body of the function describes the method of implementation, the <em>how</em>. As a user, or a caller of the function, you only need to concern yourself with the function's signature. The body of the function can be modified without affecting the caller, provided that the function's signature remains the same.</p>
+<p>Visibility control is another facet of encapsulation. By marking a method (or function, field, etc.) as non-public, we express that it belongs to the <em>how</em> category. This means it can be modified or removed without affecting users who cannot access it.</p>
+<p><strong>Polymorphism</strong>, on the other hand, permits us to perform a single task in various ways. Polymorphism takes on different forms in different programming languages, such as virtual functions, interfaces, and higher-order functions. Despite these differences, the core principle remains the same: we define <em>what</em> a method (or function, etc.) is, in other words, its signature. The implementation or the <em>how</em> can differ. This allows calls to the same method to have different implementations.</p>
+<p>In my view, encapsulation and polymorphism are tools that express the interplay between <em>what</em> and <em>how</em>. Various programming paradigms like OOP, FP, or languages like Rust, exhibit subtle differences in my use. My focus is more on whether the expression is intuitive enough, not merely the paradigm it belongs to.</p>
+<h2 id="OOP">OOP</h2>
+<p>OOP is an effective approach to represent various objects in programming, which explains its widespread use. Any criticism of OOP for its use of design patterns may not be entirely justified, as discussed in this <a href="/2022/08/24/my-understanding-of-programming/#The-Design-Patterns">article</a>.</p>
+<p>In OOP, classes serve to describe objects. Methods are used to express the actions that these objects can undertake, while properties convey the attributes of these objects. The feature of visibility control allows for encapsulation. Non-public members denote the 'how' - the specifics of how the object functions. On the other hand, public members indicate the 'what' - the operations that can be performed and the data that can be accessed.</p>
+<p>The concept of inheritance in OOP helps express 'is-a' relationships. If class <code>A</code> inherits from class <code>B</code>, it suggests that <code>A</code> is a kind of <code>B</code>. Instances of class <code>A</code> can be viewed as objects of type <code>B</code>, possessing the methods and properties of class <code>B</code>. To achieve polymorphism, classes may contain virtual methods that subclasses can override. Interfaces, on the other hand, are used to highlight common traits between classes. Implementing an interface is akin to inheritance in that it also signifies an 'is-a' relationship, but it further specifies that a class (and other classes implementing the same interface) share a common trait. A single class can implement multiple interfaces, reflecting its potential to share different traits with different classes.</p>
+<p>There are programming languages not typically classified as object-oriented, given their lack of classes and interfaces. However, as I often stress, what matters is the ability to express ideas. If a language can communicate relationships with the same level of clarity, it should be deemed sufficient. Take Rust, for instance. While not strictly an OOP language, it leans towards composition over inheritance and uses traits to express shared characteristics. Despite not being formally OOP, Rust includes features for encapsulation and polymorphism. Hence, I believe Rust is not any less capable than OOP languages for this reason.</p>
+<h2 id="FP">FP</h2>
+<p>While object-oriented programming (OOP) is indeed robust, one might ask, &quot;Why do we need FP?&quot; The answer lies in the uniqueness of some classes. Certain cases require objects with unique structures. Using only the general OOP features may lead to code duplication. In my view, the purpose of FP language features is to better express specific groups of objects in a manner that aligns with our ideas.</p>
+<p>I advise against completely abandoning OOP in favor of FP, or vice versa. OOP is a versatile method for object expression, suitable for universal use. Yet, the uniqueness of some objects is an inherent complexity. Ignoring this won't simplify matters as we'll still need to handle these specific cases. Instead, recognizing and articulating these unique objects is a more beneficial approach.</p>
+<p>In subsequent sections, I will explore FP language features, elucidating the types of objects each feature aims to express. My focus lies on the expressiveness of these languages. In my perspective, if a language can embody a certain idea, it possesses that feature. However, the means through which a language expresses an idea can vary. I use Rust, Kotlin, Python with typing, and TypeScript as examples, but other languages like F# and the newer versions of C#, might also have these features.</p>
+<h3 id="Optional-and-Null-Values">Optional and Null Values</h3>
+<p>Many programming languages include a value expressing &quot;non-existence&quot; — <code>null</code>, <code>nil</code>, or <code>undefined</code>. However, these languages often lack a clear means to express that a value is optional. Even when a value is expected to exist, the language doesn't prevent you from using <code>null</code>, and errors only occur when operations are attempted on this <code>null</code> value.</p>
+<p>Conversely, functional programming languages typically lack values like <code>null</code>. These languages employ a type <code>Option&lt;T&gt;</code> to represent an optional value. An <code>Option&lt;T&gt;</code> can contain a value of type <code>T</code> or signify &quot;non-existence.&quot; You cannot directly operate on an <code>Option&lt;T&gt;</code> as if it were a type <code>T</code>; the value inside must be accessed after verifying its existence. Languages like Scala and Rust follow this method.</p>
+<p>Alternatively, we can retain <code>null</code>, but whether a value is optional will be indicated in the type. In Kotlin, you append a <code>?</code> to the type, while in TypeScript and Python's type annotations, this is indicated through a union of the type and a non-existent value. If you attempt an operation that requires the value existence on a optional type without checking its existence, the type checker will flag an error.</p>
+<p>Both methods provide accurate indications of whether a value is optional. They not only make the code align closely with our idea by expressing whether a value is optional, but also enable type checkers to identify errors that fail to appropriately handle missing optional values.</p>
+<p>Sometimes, we might want to &quot;fail fast&quot; when a value doesn't exist. If the absence of an expected value signifies that the environment or configuration doesn't meet requirements, or that there is a logical error (a bug), you might want the program to terminate immediately. In Kotlin, you can use <code>!!</code>, and in Rust, the <code>unwrap</code> or <code>expect</code> method. This process effectively handles the non-existence scenario, expressing the requirement for existence. However, these should only be used in situations where absence necessitates a &quot;fail-fast&quot; response. If non-existence needs proper handling, then it should be done appropriately.</p>
+<h3 id="Higher-order-Functions-and-Actions">Higher-order Functions and Actions</h3>
+<p>There are times when you might want to express ideas like &quot;make a new list from an existing list, but multiply each element by 2&quot; or &quot;set up an action to display a message when a user clicks a button.&quot; An action can be the parameter of another action, like &quot;multiply by 2&quot; or &quot;display the message.&quot; In programming, we often represent these actions as functions. Furthermore, in FP (functional programming), a function can also be an object, allowing it to be passed as an argument.</p>
+<p>Modern programming languages mostly support higher-order functions. Some languages utilize interfaces to represent functions, while others employ specialized types. Many languages offer a feature known as &quot;lambda expressions&quot; to create function objects, which essentially form the body of the function.</p>
+<p>Let's consider an example. Suppose we have a list of data with <code>score</code> and <code>id</code>, and we want to filter out the <code>id</code> of data entries with a score above 60. The following Kotlin code does the job:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">l.filter &#123; it.score &gt; <span class="number">60</span> &#125;</span><br><span class="line">    .map &#123; it.id &#125;</span><br></pre></td></tr></table></figure>
+<p>This code succinctly expresses the idea of selecting data with a score above 60 and extracting their <code>id</code>. If we were to use a more traditional approach, we would need to create a mutable list to hold the results, iterate through the original list, and after checking each score, insert the <code>id</code> into our result list. This process complicates our initial idea, making it less straightforward.</p>
+<h3 id="Immutability">Immutability</h3>
+<p>At times, it's important to express the concept of an object's immutability. A typical example is when an object holds information that multiple references will read. You'd want everyone to access the same unaltered data, similar to how an announcement on a bulletin board should be read but not changed. In concurrent programming, immutable objects help prevent data races.</p>
+<p>Strings are a commonly used example of an immutable object. In most programming languages, a string is represented by a reference or a pointer to the string content. Because strings are designed to be immutable, we don't have to worry about their content being changed by other references. This allows us to focus more on the string content rather than the object it refers to.</p>
+<p>In Java, each primitive type has an equivalent boxed type. Like other class objects, these boxed types are represented by references. However, their immutability means we usually don't need to worry about which object is referenced, only its value. Languages like Kotlin and Scala leverage this by minimizing the difference between primitive types and boxed types. They provide a single type for each numeric type, leaving it to the compiler to decide whether to use the primitive or the boxed type. The premise of this design is the immutability of boxed types.</p>
+<p>In an ideal scenario, immutable objects should never be modified. However, achieving this can be challenging. Sometimes, third-party functions might operate on mutable objects without actually modifying them. In these cases, a practical solution is to use <em>conventional immutability</em>. Here, while mutable operations on objects intended to be immutable may be technically possible, they should not be performed. Read-only can be used to reduce the risk of unwanted modifications. Providing a read-only object reference prohibits the modification of the object. Although other references could modify the object, this approach expresses the intention of immutability. Read-only can be implemented via an interface containing only read operations.</p>
+<div class="tabs" id="value-like-uses"><ul class="nav-tabs"><li class="tab active"><a href="#value-like-uses-1">Kotlin</a></li><li class="tab"><a href="#value-like-uses-2">Rust</a></li><li class="tab"><a href="#value-like-uses-3">Python</a></li><li class="tab"><a href="#value-like-uses-4">TypeScript</a></li></ul><div class="tab-content"><div class="tab-pane active" id="value-like-uses-1"><p>In Kotlin, interfaces for collections that don't begin with <em><code>Mutable</code></em> (like <code>List&lt;T&gt;</code>, <code>Set&lt;T&gt;</code>) are read-only. Also, functions used to construct collections that don't start with <em><code>mutable</code></em> (like <code>listOf</code>, <code>setOf</code>) yield immutable collections.</p></div><div class="tab-pane" id="value-like-uses-2"><p>Rust employs borrow checking to ensure that a value with multiple references stays immutable unless explicitly enclosed in a unique container like <code>RefCell</code> or <code>Mutex</code>.</p></div><div class="tab-pane" id="value-like-uses-3"><p>Python includes immutable collections like <code>tuple</code> and <code>frozenset</code>. It also provides a read-only dictionary wrapper <code>MappingProxyType</code> and read-only types such as <code>Sequence</code>, <code>AbstractSet</code>, and <code>Mapping</code> within the <code>typing</code> module.</p></div><div class="tab-pane" id="value-like-uses-4"><p>In TypeScript, the <code>readonly</code> keyword can enforce read-only properties or arrays, and <code>Object.freeze</code> can prevent an object from being mutated.</p></div></div></div>
+<p>Furthermore, there are third-party libraries that provide immutable data structures for these languages. Some of these structures offer efficient partial update operations. For instance, a set can be created with some elements added (without mutating the original set) without having to clone the entire set. Instead, it shares part of its structure with the new set.</p>
+<h3 id="Record">Record</h3>
+<p>A record in functional programming signifies an immutable object made up of properties. Their equality is determined by the values of the properties, not the references. Records can be built by defining values for properties and support partial updates. That is, a new record can be created based on an existing one by defining the values for some properties while keeping the rest unchanged.</p>
+<div class="tabs" id="record"><ul class="nav-tabs"><li class="tab active"><a href="#record-1">Kotlin &amp; Scala</a></li><li class="tab"><a href="#record-2">Rust</a></li><li class="tab"><a href="#record-3">Python</a></li><li class="tab"><a href="#record-4">TypeScript</a></li></ul><div class="tab-content"><div class="tab-pane active" id="record-1"><p>Kotlin and Scala use <code>data class</code> and <code>case class</code> respectively to depict records. In Kotlin, you can use <code>val</code> to keep properties immutable. These languages support named parameters, so it is natural to build a record by defining property values. They also contain a method to clone the object and let you define some property values, thereby enabling partial updates.</p></div><div class="tab-pane" id="record-2"><p>In Rust, records can be represented through a struct with <code>#[derive(PartialEq, Eq)]</code>, and the borrow checker controls its mutability. Partial updates can be achieved using the <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/book/ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax">struct update syntax</a>.</p></div><div class="tab-pane" id="record-3"><p>In Python, the <code>dataclass</code> annotation from the <code>dataclasses</code> module, used with the <code>frozen</code> option, allows you to represent records. It generates the <code>__eq__</code> method. To partially update a record, the <code>dataclasses</code> module provides a <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/dataclasses.html#dataclasses.replace"><code>replace</code></a> function.</p></div><div class="tab-pane" id="record-4"><p>In TypeScript, a record can be presented as an object type. Fields can be made read-only with the <code>readonly</code> keyword, and <code>Object.freeze</code> ensures that the object won't be altered. Partial updates can be performed using <a target="_blank" rel="noopener" href="https://www.javascripttutorial.net/es-next/javascript-object-spread/">Object Spread</a>. However, TypeScript currently doesn't support customizing object equality.</p></div></div></div>
+<h3 id="Newtype">Newtype</h3>
+<p>Some data is represented by an existing type but bears unique meanings and constraints. For instance, a username can be represented as a string, but it's more than a string due to specific restrictions and its unique significance, differentiating it from other string-represented data like an email address.</p>
+<p>FP offers a Newtype feature to represent such data. Considering the username example, we can use a string wrapper class (a class containing only a string) to symbolize the username, which equates based on the string value. This approach offers several benefits:</p>
+<ul>
+<li>It clearly identifies it as a username (as opposed to a regular string).</li>
+<li>It indicates the boundary between validated and unvalidated<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> values.</li>
+<li>If an unvalidated string is mistaken for a username, a type check error occurs.</li>
+<li>If an email address is incorrectly used as a username, a type check error occurs.</li>
+</ul>
+<div class="tabs" id="newtype"><ul class="nav-tabs"><li class="tab active"><a href="#newtype-1">Kotlin</a></li><li class="tab"><a href="#newtype-2">Rust</a></li><li class="tab"><a href="#newtype-3">Python</a></li><li class="tab"><a href="#newtype-4">TypeScript</a></li></ul><div class="tab-content"><div class="tab-pane active" id="newtype-1"><p>In Kotlin, <code>value class</code>es can represent newtypes. To enforce the value being valid, you can perform validation in the <code>init</code> block or make the constructor private and provide a validation method. The latter allows invalid errors to return more than just exceptions, like the failure of <code>Result&lt;T&gt;</code>.</p>
+<p>Newtypes can also be depicted by a data class, which is similar to a value class, but if you don't validate in the <code>init</code> block, even with a private constructor, objects with invalid values could be created by the <code>copy</code> function.</p></div><div class="tab-pane" id="newtype-2"><p>In Rust, Newtypes can be implemented with a struct that contains a single field. If you want to enforce the value being valid, the field can be made private. In this case, you should provide a verification method that returns a newtype value, along with methods to access and immutably borrow the field.</p></div><div class="tab-pane" id="newtype-3"><p>Python can implement newtypes using <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/typing.html#newtype"><code>NewType</code></a> from the <code>typing</code> module. It doesn't enforce the value being valid, but explicitly constructing newtype values considerably reduces the error of mistaking an unvalidated value for a validated one.</p></div><div class="tab-pane" id="newtype-4"><p>In TypeScript, new types can be realized using the <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/56749647/7296427">branded type</a> pattern. Like Python's NewType, it cannot enforce the value being valid.</p></div></div></div>
+<h3 id="Algebraic-Data-Types">Algebraic Data Types</h3>
+<p>Certain data types comprise multiple variants, each with distinct contents. In our dealings with data, we often need to approach each variant differently. Algebraic Data Types (ADTs) in functional programming allow us to articulate this kind of data.</p>
+<p>An &quot;is-a&quot; relationship can often be observed between the data and its variants. You might prefer to express the data as a class and the process of handling it as a method. Then, each variant would inherit from the data class, overriding the methods to facilitate variant-specific processing. However, with data, the variants and their content are usually known and relatively fixed, while the data processing methods are often unpredictable and extendable.</p>
+<p>The SOLID principles include the &quot;open-closed principle&quot;, which states that a class should be open for extensions but closed for modifications. Importantly, this rule doesn't explicitly define what constitutes a modification or an extension. Sometimes, adding a subclass could be viewed as an extension, while adding a method could be viewed as a modification. Other times, adding a process could be viewed as an extension, while adding a variant could be seen as a modification. None of these possibilities should be overlooked, and Algebraic Data Types align well with this latter perspective.</p>
+<p>In Rust, the <code>enum</code> keyword allows us to naturally express this data. Union type representations can express this in TypeScript and Python's type annotations. Kotlin and Scala allow marking classes with <code>sealed</code> to inhibit external class inheritance.</p>
+<p>To process this data, Rust and Scala offer the pattern matching feature, a staple in FP. With pattern matching, you can write code for each variant of data, with the content of each variant bound to its specific code path's local value. Pattern matching ensures comprehensive coverage of all cases through exhaustiveness checks.</p>
+<p>In fact, the <code>Option</code> type in Rust and Scala, referenced in the <em>Optional and null</em> section, is an Algebraic Data Type. It has two variants: existing (usually called <em>Some</em>) and non-existing (usually called <em>None</em>). Only the existing variant carries a value.</p>
+<p>In Kotlin, TypeScript, and Python type checking, you can use smart-cast to express this processing logic. Provided that the data belongs to a particular variant, the data will automatically assume the type of that variant, granting access to its content. These languages also enforce exhaustiveness checks.</p>
+<p>If exhaustiveness checking isn't inherently supported, patterns like the Visitor pattern can implement it. However, they introduce complexity in expressing.</p>
+<p>Utilizing ADT, we can establish a type that signifies success or failure. This can be an alternative to the exception mechanism for error handling in some languages. You can find my thoughts on error handling in <a href="/2022/09/03/my-preferred-error-handling/">this blog</a>.</p>
+<h2 id="Conclusion">Conclusion</h2>
+<p>In this article, I've shared my perspective on Object-Oriented Programming (OOP) and Functional Programming (FP). I view OOP as a broad method for expressing objects, while FP is better suited for specific cases.</p>
+<p>You might note that I've refrained from discussing category theory or the &quot;monoid in the category of endofunctors™&quot;. I'll be crafting a blog post about my standpoint on category theory. Here's a spoiler: I am not in favor of applying category theory in programming.</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>The term <em>Unvalidated</em> refers to a value that hasn't been validated yet. It could either be valid or invalid. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/paypal.png" alt="Jason5Lee PayPal">
+        <span>PayPal</span>
+      </div>
+      <div>
+        <img src="/images/ethereum.png" alt="Jason5Lee Ethereum">
+        <span>Ethereum</span>
+      </div>
+      <div>
+        <img src="/images/bitcoin.png" alt="Jason5Lee Bitcoin">
+        <span>Bitcoin</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Programming/" rel="tag"># Programming</a>
+              <a href="/tags/FP/" rel="tag"># FP</a>
+              <a href="/tags/OOP/" rel="tag"># OOP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/24/my-views-on-programming-languages/" rel="prev" title="My Views on Programming Languages">
+                  <i class="fa fa-chevron-left"></i> My Views on Programming Languages
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/24/coroutines/" rel="next" title="Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More">
+                  Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason5Lee</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
