@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -15,10 +15,10 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family='Source+Serif+4':300,300italic,400,400italic,700,700italic%7C'JetBrains+Mono':300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jason5lee.me","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Jason5Lee Personal Blog">
 <meta property="og:type" content="website">
@@ -32,7 +32,6 @@
 
 
 <link rel="canonical" href="https://jason5lee.me/">
-
 
 
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
@@ -156,7 +155,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2023/06/24/coroutines/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/understanding-coroutines/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -174,7 +173,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/24/coroutines/" class="post-title-link" itemprop="url">Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More</a>
+          <a href="/understanding-coroutines/" class="post-title-link" itemprop="url">Handling Concurrency&#58; Understanding Coroutines, Async/Await, Scheduling, and More</a>
         </h2>
 
         <div class="post-meta-container">
@@ -207,10 +206,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>As the number of concurrency that the service needs to support is getting higher and higher, technologies such as asynchronous I/O, coroutines, and async/await are being used increasingly. While these techniques can increase the amount of concurrency supported by a service, they aren't particularly easy to understand. In this article, I'll share my own understanding of these technologies, hoping to aid your understanding.</p>
+          <p>We often need to execute multiple tasks simultaneously in the program, such as a server handling multiple requests at the same time or a browser rendering the UI while performing I/O operations. As concurrency in our programs increases, technologies like asynchronous I/O, coroutines, and async/await are being used to support it. In this article, I'll share my understanding of these technologies, hoping to help you comprehend and apply them.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/06/24/coroutines/#more" rel="contents">
+              <a class="btn" href="/understanding-coroutines/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -241,7 +240,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/08/30/my-understanding-of-oop-and-fp/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/my-understanding-of-oop-and-fp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -259,7 +258,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/08/30/my-understanding-of-oop-and-fp/" class="post-title-link" itemprop="url">My Understanding of OOP and FP</a>
+          <a href="/my-understanding-of-oop-and-fp/" class="post-title-link" itemprop="url">My Understanding of OOP and FP</a>
         </h2>
 
         <div class="post-meta-container">
@@ -292,11 +291,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>In my <a href="/2022/08/24/my-views-on-programming-languages/">previous article</a>, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.</p>
+          <p>In my <a href="/my-views-on-programming-languages/">previous article</a>, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.</p>
 <p>To summarize briefly: OOP is used to express intentions about universal objects, whereas functional programming primarily focuses on specific types of objects.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2022/08/30/my-understanding-of-oop-and-fp/#more" rel="contents">
+              <a class="btn" href="/my-understanding-of-oop-and-fp/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -327,7 +326,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/08/24/my-views-on-programming-languages/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/my-views-on-programming-languages/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -345,7 +344,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/08/24/my-views-on-programming-languages/" class="post-title-link" itemprop="url">My Views on Programming Languages</a>
+          <a href="/my-views-on-programming-languages/" class="post-title-link" itemprop="url">My Views on Programming Languages</a>
         </h2>
 
         <div class="post-meta-container">
@@ -381,7 +380,7 @@
           <p>There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and my understanding of design patterns.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2022/08/24/my-views-on-programming-languages/#more" rel="contents">
+              <a class="btn" href="/my-views-on-programming-languages/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -412,7 +411,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/04/12/telegram-bot-rust-azure-function/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/telegram-bot-rust-azure-function/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -430,7 +429,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/04/12/telegram-bot-rust-azure-function/" class="post-title-link" itemprop="url">Building a Telegram Bot on Azure Function in Rust</a>
+          <a href="/telegram-bot-rust-azure-function/" class="post-title-link" itemprop="url">Building a Telegram Bot on Azure Function in Rust</a>
         </h2>
 
         <div class="post-meta-container">
@@ -466,7 +465,7 @@
           <p>In this tutorial, I'll go through the process of building a telegram bot in Rust, hosted in Azure Function. As an example, we build a bot to randomly pick a line from the message to help you, for example, decide what to eat for dinner.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2022/04/12/telegram-bot-rust-azure-function/#more" rel="contents">
+              <a class="btn" href="/telegram-bot-rust-azure-function/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -497,7 +496,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2022/03/11/rust-exception-async/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/rust-exception-async/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -515,7 +514,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/11/rust-exception-async/" class="post-title-link" itemprop="url">Simulate exception in async Rust</a>
+          <a href="/rust-exception-async/" class="post-title-link" itemprop="url">Simulate exception in async Rust</a>
         </h2>
 
         <div class="post-meta-container">
@@ -553,7 +552,7 @@
 <p>Well, it is possible with async Rust, but we need a little trick. The main idea here is to stop polling the future after an exception is thrown.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2022/03/11/rust-exception-async/#more" rel="contents">
+              <a class="btn" href="/rust-exception-async/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -584,7 +583,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/2020/01/11/rust-costumized-trait-object/">
+    <link itemprop="mainEntityOfPage" href="https://jason5lee.me/rust-costumized-trait-object/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -602,7 +601,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/11/rust-costumized-trait-object/" class="post-title-link" itemprop="url">Customized trait object in Rust</a>
+          <a href="/rust-costumized-trait-object/" class="post-title-link" itemprop="url">Customized trait object in Rust</a>
         </h2>
 
         <div class="post-meta-container">
@@ -638,7 +637,7 @@
           <p>I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it's impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library <a target="_blank" rel="noopener" href="https://github.com/Jason5Lee/rust-recur-fn">RecurFn</a>, and I develop a workaround, calling it <strong>customized trait object</strong>.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/01/11/rust-costumized-trait-object/#more" rel="contents">
+              <a class="btn" href="/rust-costumized-trait-object/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
