@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>My Views on Programming Languages // Jason5Lee&#39;s Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.163.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Jason5Lee" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.42bdc8a4f3066c478bcf0b98d065ccafb4da583810af2da8b2ba3f514d29d09f.css" />
+    
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="My Views on Programming Languages">
+	<meta name="twitter:description" content="There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and my understanding of design patterns.
+Code as an Expression of Intent When we write code, we use it to express our intentions. When we read code, we understand the author’s intentions through it. Similarly, a compiler or interpreter executes our intentions based on the code. Therefore, the primary function of code is to express intent.">
+
+    <meta property="og:url" content="https://jason5lee.me/blog/my-views-on-programming-languages/">
+	<meta property="og:site_name" content="Jason5Lee&#39;s Blog">
+	<meta property="og:title" content="My Views on Programming Languages">
+	<meta property="og:description" content="There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and my understanding of design patterns.
+Code as an Expression of Intent When we write code, we use it to express our intentions. When we read code, we understand the author’s intentions through it. Similarly, a compiler or interpreter executes our intentions based on the code. Therefore, the primary function of code is to express intent.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2022-08-24T22:29:00+00:00">
+		<meta property="article:modified_time" content="2022-08-24T22:29:00+00:00">
+		<meta property="article:tag" content="Programming">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="/"><img class="app-header-avatar" src="/images/avatar.png" alt="Jason5Lee" /></a>
+      <span class="app-header-title">Jason5Lee&#39;s Blog</span>
+      <p>Ideas worth sharing</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">My Views on Programming Languages</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Aug 24, 2022
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          14 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="/tags/programming/">Programming</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>There are many debates about the good and bad aspects of programming languages, and I will present my own viewpoints in this blog. I will also explain the keys to learning a programming language, and my understanding of design patterns.</p>
+<h2 id="code-as-an-expression-of-intent">Code as an Expression of Intent</h2>
+<p>When we write code, we use it to express our intentions. When we read code, we understand the author&rsquo;s intentions through it. Similarly, a compiler or interpreter executes our intentions based on the code. Therefore, the primary function of code is to express intent.</p>
+<h2 id="characteristics-of-a-good-programming-language">Characteristics of a Good Programming Language</h2>
+<p>Given that code is an expression of intent, a good programming language should meet the following criteria:</p>
+<ol>
+<li>
+<p><strong>Directness</strong>: We should be able to &ldquo;translate&rdquo; our intentions directly into code. There should only be differences in words and symbols between the intent and the code, with no rewritten or information loss. This makes it easier to both write code from our intentions and understand the author&rsquo;s intentions when reading the code.</p>
+</li>
+<li>
+<p><strong>Correctness</strong>: The language should make it harder to write bugs. Generally, correctness and directness are positively correlated. The simpler the transformation from intent to code, the fewer chances for errors that prevent the code from correctly representing the intent. Additionally, the less information the code loses (such as types), the more a compiler or static analysis tool can understand the intent and check its correctness. For example, if we want to access an object&rsquo;s attribute, the tool can check if the attribute exists or if the object could be null. An exception to directness is when operations are prone to misuse; in such cases, making them more cumbersome can help prevent errors, trading some directness for correctness.</p>
+</li>
+<li>
+<p><strong>Convenience</strong>: For frequently used intentions, the language should offer concise ways to express them, similar to how &ldquo;+&rdquo; and &ldquo;-&rdquo; symbols in mathematics make addition and subtraction easier to write.</p>
+</li>
+</ol>
+<p>Let&rsquo;s take an example. We want to express &ldquo;user information.&rdquo; It includes a username, nickname, and an optional birthday. The username and nickname are text, while the birthday is a date. Here are some examples of how different programming languages might express this intention.</p>
+<div class="tabs" data-tab-group="record-example">
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record-example"
+  id="record-example-kotlin-0"
+  checked
+>
+<label class="tabs-label" for="record-example-kotlin-0">Kotlin</label>
+<div class="tabs-panel"><p>Definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UserInfo</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> userName: String,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> nickName: String,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> birthday: Date? = <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>To construct user information with only a user name and nickname (no birthday):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span>UserInfo(
+</span></span><span style="display:flex;"><span>    userName = <span style="color:#e6db74">&#34;Jason5Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>    nickName = <span style="color:#e6db74">&#34;Jason Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span>userInfo.copy(birthday = Date(<span style="color:#ae81ff">1997</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">17</span>))
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record-example"
+  id="record-example-rust-1"
+  
+>
+<label class="tabs-label" for="record-example-rust-1">Rust</label>
+<div class="tabs-panel"><p>Definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">UserInfo</span> {
+</span></span><span style="display:flex;"><span>    user_name: String,
+</span></span><span style="display:flex;"><span>    nick_name: String,
+</span></span><span style="display:flex;"><span>    birthday: Option<span style="color:#f92672">&lt;</span>NaiveDate<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>To construct user information with only a user name and nickname (no birthday):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>UserInfo {
+</span></span><span style="display:flex;"><span>    user_name: <span style="color:#e6db74">&#34;Jason5Lee&#34;</span>.to_string(),
+</span></span><span style="display:flex;"><span>    nick_name: <span style="color:#e6db74">&#34;Jason Lee&#34;</span>.to_string(),
+</span></span><span style="display:flex;"><span>    birthday: None,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>UserInfo {
+</span></span><span style="display:flex;"><span>    birthday: Some(NaiveDate::from_ymd_opt(<span style="color:#ae81ff">1997</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">17</span>).unwrap()),
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">..</span>user_info
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record-example"
+  id="record-example-c-2"
+  
+>
+<label class="tabs-label" for="record-example-c-2">C#</label>
+<div class="tabs-panel"><p>Definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">record</span> <span style="color:#a6e22e">UserInfo</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">string</span> UserName,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">string</span> NickName,
+</span></span><span style="display:flex;"><span>    DateTime? Birthday = <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>To construct user information with only a user name and nickname (no birthday):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">new</span> UserInfo(
+</span></span><span style="display:flex;"><span>    UserName: <span style="color:#e6db74">&#34;Jason5Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>    NickName: <span style="color:#e6db74">&#34;Jason Lee&#34;</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>userInfo with { Birthday = <span style="color:#66d9ef">new</span> DateTime(<span style="color:#ae81ff">1997</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>) }
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record-example"
+  id="record-example-typescript-3"
+  
+>
+<label class="tabs-label" for="record-example-typescript-3">TypeScript</label>
+<div class="tabs-panel"><p>Definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">UserInfo</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">userName</span>: <span style="color:#66d9ef">string</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">nickName</span>: <span style="color:#66d9ef">string</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">birthday?</span>: <span style="color:#66d9ef">Date</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>To construct user information with only a user name and nickname (no birthday):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">userName</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Jason5Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">nickName</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Jason Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">satisfies</span> <span style="color:#a6e22e">UserInfo</span>
+</span></span></code></pre></div><p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ...<span style="color:#a6e22e">userInfo</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">birthday</span>: <span style="color:#66d9ef">new</span> Date(<span style="color:#e6db74">&#34;1997-12-17&#34;</span>),
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">satisfies</span> <span style="color:#a6e22e">UserInfo</span>
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record-example"
+  id="record-example-python-4"
+  
+>
+<label class="tabs-label" for="record-example-python-4">Python</label>
+<div class="tabs-panel"><p>Definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>(frozen<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UserInfo</span>:
+</span></span><span style="display:flex;"><span>    user_name: str
+</span></span><span style="display:flex;"><span>    nick_name: str
+</span></span><span style="display:flex;"><span>    birthday: Optional[date] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><p>To construct user information with only a user name and nickname (no birthday):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>UserInfo(
+</span></span><span style="display:flex;"><span>    user_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Jason5Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>    nick_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Jason Lee&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>To create a new user information record, changing only the birthday and keeping all other information the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dataclasses<span style="color:#f92672">.</span>replace(userInfo, birthday <span style="color:#f92672">=</span> date(<span style="color:#ae81ff">1997</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">17</span>))
+</span></span></code></pre></div></div>
+
+
+</div>
+
+<p>In these languages, I can directly define and construct &ldquo;user information&rdquo; accurately reflecting my intent without any rewritten or information loss. The type checking (including Python&rsquo;s static type checker, <a href="https://github.com/microsoft/pyright">Pyright</a>) ensures that attribute values are of the correct type and that nullable attributes can indeed be null.</p>
+<p>In other programming languages, I either have to sacrifice this directness or use design patterns. For instance, in many languages, I would need to use <code>new UserInfo(&quot;Jason5Lee&quot;, &quot;Jason Lee&quot;, null)</code> to construct an object. Here, I must specify the values in a certain order rather than directly mapping them to properties as in my mind. When reading the code, it is also not immediately clear which properties correspond to which values, demonstrating a lack of directness.</p>
+<p>Alternatively, I could use the Builder pattern in these languages, allowing me to specify property values through the builder object. However, this introduces a Builder concept that doesn&rsquo;t exist in my original intent. Moreover, the Builder pattern makes it harder to ensure that all necessary properties have values, reducing correctness.</p>
+<p>Consider another example: suppose we have a sequence of user information, and we want to find the usernames of all users born in or after the year 2000. Some programmers might instinctively start writing code to create a new sequence of strings, loop through each user, add usernames of those who meet the birthday condition to the new sequence, and finally return this new sequence as the result. This process involves &ldquo;rewriting&rdquo; the original intent into a more detailed procedure, which then needs to be expressed in code. Here, the code does not directly represent the original intent. This not only requires extra rewritten when writing code but also &ldquo;deductive reasoning&rdquo; when reading the code to understand the fundamental intent—a task more suited to Sherlock Holmes than to a programmer.</p>
+<p>In some programming languages, this intent can be expressed more directly.</p>
+<div class="tabs" data-tab-group="list-example">
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="list-example"
+  id="list-example-kotlin-0"
+  checked
+>
+<label class="tabs-label" for="list-example-kotlin-0">Kotlin</label>
+<div class="tabs-panel"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#75715e">// users: List&lt;UserInfo&gt;
+</span></span></span><span style="display:flex;"><span>users
+</span></span><span style="display:flex;"><span>    .filter {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> birthday = <span style="color:#66d9ef">it</span>.birthday
+</span></span><span style="display:flex;"><span>        birthday <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> birthday.year <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2000</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    .map { <span style="color:#66d9ef">it</span>.userName }
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="list-example"
+  id="list-example-rust-1"
+  
+>
+<label class="tabs-label" for="list-example-rust-1">Rust</label>
+<div class="tabs-panel"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// users: impl Iterator&lt;Item=UserInfo&gt;
+</span></span></span><span style="display:flex;"><span>users
+</span></span><span style="display:flex;"><span>    .filter(<span style="color:#f92672">|</span>user<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> user.birthday {
+</span></span><span style="display:flex;"><span>        None <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>        Some(birthday) <span style="color:#f92672">=&gt;</span> birthday.year() <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2000</span>,
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>    .map(<span style="color:#f92672">|</span>user<span style="color:#f92672">|</span> user.user_name)
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="list-example"
+  id="list-example-c-2"
+  
+>
+<label class="tabs-label" for="list-example-c-2">C#</label>
+<div class="tabs-panel"><p>Linq Syntax:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// users: IEnumerable&lt;UserInfo&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> user <span style="color:#66d9ef">in</span> users
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> user.Birthday <span style="color:#66d9ef">is</span> {} birthday &amp;&amp; birthday.Year &gt;= <span style="color:#ae81ff">2000</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> user.UserName
+</span></span></code></pre></div><p>Lambda Syntax:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>users
+</span></span><span style="display:flex;"><span>    .Where(user =&gt; user.Birthday <span style="color:#66d9ef">is</span> {} birthday &amp;&amp; birthday.Year &gt;= <span style="color:#ae81ff">2000</span>)
+</span></span><span style="display:flex;"><span>    .Select(user =&gt; user.UserName)
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="list-example"
+  id="list-example-typescript-3"
+  
+>
+<label class="tabs-label" for="list-example-typescript-3">TypeScript</label>
+<div class="tabs-panel"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// users: UserInfo[]
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">users</span>
+</span></span><span style="display:flex;"><span>  .<span style="color:#a6e22e">filter</span>(<span style="color:#a6e22e">user</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">birthday</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">undefined</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">birthday</span>.<span style="color:#a6e22e">getUTCFullYear</span>() <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2000</span>)
+</span></span><span style="display:flex;"><span>  .<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">user</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">userName</span>)
+</span></span></code></pre></div></div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="list-example"
+  id="list-example-python-4"
+  
+>
+<label class="tabs-label" for="list-example-python-4">Python</label>
+<div class="tabs-panel"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># users: list[UserInfo]</span>
+</span></span><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>    user<span style="color:#f92672">.</span>user_name 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> user <span style="color:#f92672">in</span> users 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> user<span style="color:#f92672">.</span>birthday <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> user<span style="color:#f92672">.</span>birthday<span style="color:#f92672">.</span>year <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2000</span>
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div></div>
+
+
+</div>
+
+<p>The difference between these code and our original intent is mainly in terms and symbols, with very few restructuring. It doesn&rsquo;t require altering our intentions to be expressed. Once you become familiar with this style, its readability improves as it directly represents the original intent.</p>
+<p>It&rsquo;s not appropriate to use this method for sequence processing in every situation. If your intention is to create a sequence first and then add elements to it, you should write it that way. This is why I&rsquo;m not fond of some &ldquo;functional programming languages&rdquo; — they force you to write code in a so-called &ldquo;functional&rdquo; manner, which can feel indirect. In my opinion, the ability to express oneself directly and straightforwardly is the most important.</p>
+<p>You may have noticed that, in addition to checking the birth year, the code also checks whether the birthday exists. This is because our original intent had a flaw: it didn&rsquo;t consider that the birthday might be optional. If we write code without considering the possibility of a missing birthday, a type-checking tool can detect this issue. This is an aspect of correctness. Since the code retains information about whether a field is optional or possibly null, the tool can use this information for validation.</p>
+<h2 id="the-simplicity-of-the-language-and-the-simplicity-of-its-usage">The Simplicity of the Language and the Simplicity of its Usage</h2>
+<p>The simplicity of a programming language can be viewed in two ways: the inherent simplicity of the language itself and the simplicity of using it. Some people use &ldquo;simplicity&rdquo; as a reason for a language not supporting certain features, referring to the inherent simplicity of the language.</p>
+<p>However, the more crucial simplicity, in my opinion, is often overlooked: the simplicity of usage. A straightforward programming language makes it easier to translate original intentions into code, simplifying the process of writing and reading code. The inherent simplicity of a language only reduces the effort by a constant factor. Learning a language with many features does require more effort, but this effort is only needed once. If a language is simple to use, it reduces the effort required to write and read each piece of code. If the effort required to write <code>n</code> amount of code in a language is <code>a*n + b</code>, the inherent simplicity mainly affects the value of <code>b</code>, while the simplicity of usage can reduce <code>a</code>. When <code>n</code> is large, I prefer a smaller <code>a</code>.</p>
+<p>Of course, having too many features, especially those prone to misuse, can reduce directness and simplicity of usage. However, many people focus excessively on the inherent simplicity of a language and ignore the simplicity of expression, which I believe needs to change.</p>
+<p>Furthermore, some complexities are objectively present. Ignoring them only makes handling them more troublesome, as you still need to deal with them, but without clear expression in the code. A typical example is types. You always need to consider the type of a value to decide how to handle it, but if this information is not expressed in the code, handling it becomes much more difficult. Not only do you need to deduce the type like a detective when reading the code, but the code also cannot be checked by static checking tools. Ignoring objective complexities and mistaking this for simplicity can sometimes cause more trouble.</p>
+<p>This is also why I prefer Rust for low-level development. When manually managing memory, lifetimes are objectively necessary to consider to avoid errors like using freed memory. Rust’s lifetime and borrowing checks are not easy to learn, but they maintain lifetime information from your intent, allowing readers to understand and enabling the borrowing checker to prevent values from being used outside their lifetimes. The benefits of this simplification outweigh the learning complexity.</p>
+<h2 id="the-importance-of-programming-languages">The Importance of Programming Languages</h2>
+<p>In mathematics, we use a specific language to describe formulas. We do not use natural language because mathematical formulas are more precise and clear than natural language. This is why pseudocode is often used to describe algorithms. Even if we do not need the computer to execute it, code has the advantage of precision and clarity over natural language for human reading. Code also has higher correctness, allowing tools to check for potential errors in our intentions. Therefore, a programming language is not just a &ldquo;tool&rdquo;; it serves as an irreplaceable means of expressing intentions concisely and unambiguously, which is why code cannot be replaced by comments or other natural language texts.</p>
+<p>Code, like mathematical formulas, is also convenient. Common intentions are represented using short symbols. If we used natural language for mathematical formulas, it would initially seem more familiar but would be much less convenient to read and write compared to current mathematical formulas. This is another <code>a*n + b</code> scenario. Convenience reduces <code>a</code>.</p>
+<h3 id="comments">Comments</h3>
+<p>The role of comments and documentation should be to describe higher-level purposes rather than detail intentions. For example, if you write a sorting algorithm, documentation can state that the function sorts and whether the sorting is stable. For a section of code, comments can explain the purpose of that code. However, code remains the primary choice for expressing each specific step.</p>
+<h3 id="testing">Testing</h3>
+<p>Testing should focus on verifying whether your intended solution achieves its goal, such as whether a sorting function is correct. However, in a less direct programming language, we also need to test whether the rewritten intentions align with the original intentions. For languages with lower correctness, we need to test each step&rsquo;s correctness. Conversely, if a language has high directness and correctness, it only requires &ldquo;coarse-grained&rdquo;, more &ldquo;black-box&rdquo; testing. This is one reason why testing cannot replace type checking: testing is good at verifying overall correctness, not the correctness of each detail step.</p>
+<p>Test-Driven Development (TDD) is a common development approach. It should be used to build intentions. That is, when you have a rough goal but are unsure how to achieve it, you can propose a solution for a specific input, then refine this solution based on additional inputs, eventually arriving at a solution that handles all inputs correctly. In TDD, tests represent specific inputs and expected outputs, while implementation code represents the intended solution which is continuously refined. A good programming language is still valuable for expressing this intention through code.</p>
+<h2 id="how-to-learn-a-programming-language">How to Learn a Programming Language</h2>
+<p>In my view, the key to learning a programming language is learning how to express intentions with it. For example, an <code>if</code> statement represents executing different code under different conditions, corresponding to the thought &ldquo;if&hellip; then&hellip; else&hellip;&rdquo;. In OOP (object-oriented programming), inheritance represents an &ldquo;is-a&rdquo; relationship. If a class is a type of another class, this relationship can be represented by inheritance. The combination of inheritance and method overriding also enables polymorphism (representing that the same method can have different implementations in different specific classes). In my article on <a href="/2022/08/30/my-understanding-of-oop-and-fp/">object-oriented and functional programming</a>, I detailed how these paradigms express specific intentions.</p>
+<h2 id="on-design-patterns">On Design Patterns</h2>
+<p>In a programming language, if an intention is hard to express directly, we use a pattern, hence design patterns. In my opinion, <strong>design patterns exist because languages lack corresponding features</strong>. Many people believe that the need for design patterns is a flaw of OOP because the concept was first introduced in a book titled &ldquo;Design Patterns: Elements of Reusable Object-Oriented Software&rdquo;. This can create the illusion that non-OOP languages do not need design patterns. In fact, design patterns arise because some intentions are hard to express directly in languages with <em>only</em> the object-oriented paradigm. Even in a non-OOP language, if an intention cannot be expressed directly, design patterns are needed. The Builder pattern mentioned earlier is an example. We need the Builder pattern because some languages cannot create objects by specifying property values, and this is not directly related to whether the language is object-oriented.</p>
+<p>Another example is the Visitor pattern, used to express data containing multiple cases, where each case might contain different information. We want to express different processing for different cases of data. The cases and information for each case are stable, but the processing is unknown and extensible. In summary, the Visitor pattern defines a Visitor interface containing methods to process each case. The data itself includes a polymorphic <code>visit</code> method that accepts a Visitor interface. For each case, the implementation of the <code>visit</code> method calls the corresponding method on the Visitor interface. This way, processing of the data can be represented by implementing the Visitor interface and processed via the <code>visit</code> method. This not only expresses the data, cases, and processing but also prevents missing case processing because the corresponding interface methods must be implemented.</p>
+<p>If a language does not need the Visitor pattern, it should have corresponding features to express such data. In Kotlin and Scala, the <code>sealed</code> keyword can express this. Rust uses <code>enum</code>. TypeScript and Python&rsquo;s type annotations use union. We can say these languages do not need the Visitor pattern because they have a direct way to express it.</p>
+<p>Some might argue that they can define an interface or class and cast down during processing. This approach avoids both the Visitor pattern and language features. However, no one stops them from doing this in an object-oriented language like Java. They cannot claim design patterns are unique to object-oriented languages or Java. Furthermore, this is a typical example of ignoring objective complexity. They still need to care about whether the data should be processed by case and what cases exist. But if this expression is unclear, judging it becomes more troublesome, making it harder to ensure all cases are processed, and more prone to errors.</p>
+<p>When learning design patterns, I suggest focusing on understanding the intentions they aim to express.</p>
+<h2 id="special-thanks">Special Thanks</h2>
+<p>My understanding of programming has been greatly influenced by Scott Wlaschin. He has <a href="https://fsharpforfunandprofit.com/">an F# blog</a> and has written a book <a href="https://fsharpforfunandprofit.com/books/#domain-modeling-made-functional">&ldquo;Domain Modeling Made Functional: Tackle Software Complexity with Domain-Driven Design and F#&rdquo;</a> on combining domain modeling and functional programming. I generalized his domain modeling theory into &ldquo;expressing intentions&rdquo;. Although I disagree with him on some views regarding functional and OOP, this does not diminish his significant contribution to shaping my views, for which I am very grateful.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

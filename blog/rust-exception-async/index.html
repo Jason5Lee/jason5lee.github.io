@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Simulate exception in async Rust // Jason5Lee&#39;s Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.163.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Jason5Lee" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.42bdc8a4f3066c478bcf0b98d065ccafb4da583810af2da8b2ba3f514d29d09f.css" />
+    
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Simulate exception in async Rust">
+	<meta name="twitter:description" content="WARNING: This may be a bad practice. The point of this article is just to share my idea.
+Exception is a popular feature in many programming languages. Unlike Rust where errors are considered as a return value of the Err case of Result, in these languages errors are thrown like panic. The caller may catch the errors and process them similar to catch_unwind in Rust. Different people may have different preferences on the error handling style, but panic-unwind is always considered a bad practice and should be avoided if possible. So using exception-like error handling in Rust is impossible.">
+
+    <meta property="og:url" content="https://jason5lee.me/blog/rust-exception-async/">
+	<meta property="og:site_name" content="Jason5Lee&#39;s Blog">
+	<meta property="og:title" content="Simulate exception in async Rust">
+	<meta property="og:description" content="WARNING: This may be a bad practice. The point of this article is just to share my idea.
+Exception is a popular feature in many programming languages. Unlike Rust where errors are considered as a return value of the Err case of Result, in these languages errors are thrown like panic. The caller may catch the errors and process them similar to catch_unwind in Rust. Different people may have different preferences on the error handling style, but panic-unwind is always considered a bad practice and should be avoided if possible. So using exception-like error handling in Rust is impossible.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2022-03-11T22:40:23+00:00">
+		<meta property="article:modified_time" content="2022-03-11T22:40:23+00:00">
+		<meta property="article:tag" content="Rust">
+		<meta property="article:tag" content="Async">
+		<meta property="article:tag" content="Exception">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="/"><img class="app-header-avatar" src="/images/avatar.png" alt="Jason5Lee" /></a>
+      <span class="app-header-title">Jason5Lee&#39;s Blog</span>
+      <p>Ideas worth sharing</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Simulate exception in async Rust</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Mar 11, 2022
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          3 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="/tags/rust/">Rust</a>
+              <a class="tag" href="/tags/async/">Async</a>
+              <a class="tag" href="/tags/exception/">Exception</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p><strong>WARNING</strong>: This may be a bad practice. The point of this article is just to share my idea.</p>
+<p>Exception is a popular feature in many programming languages. Unlike Rust where errors are considered as a return value of the <code>Err</code> case of <code>Result</code>, in these languages errors are thrown like <code>panic</code>. The caller may catch the errors and process them similar to <code>catch_unwind</code> in Rust. Different people may have different preferences on the error handling style, but panic-unwind is always considered a bad practice and should be avoided if possible. So using exception-like error handling in Rust is impossible.</p>
+<p>Well, it is possible with async Rust, but we need a little trick. The main idea here is to stop polling the future after an exception is thrown.</p>
+<p>First, we define an exception context, which stores the thrown exception if any.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(Default)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExceptionContext</span> {
+</span></span><span style="display:flex;"><span>    exception: <span style="color:#a6e22e">std</span>::cell::Cell<span style="color:#f92672">&lt;</span>Option<span style="color:#f92672">&lt;</span>anyhow::Error<span style="color:#f92672">&gt;&gt;</span>, <span style="color:#75715e">// You can change `anyhow::Error` to your exception type.
+</span></span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> ExceptionContext {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>() -&gt; <span style="color:#a6e22e">ExceptionContext</span> {
+</span></span><span style="display:flex;"><span>        std::default::Default::default()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>For the function that may throw the exception, it needs to accept an argument with type <code>&amp;ExceptionContext</code>. If there is already a context-like type, you can consider embedding this struct into it.</p>
+<p>Now, we try to implement the throw function. When an exception is thrown, the exception field will be set, and the code after the throw should not be executed. We can do this by <code>core::future::pending().await</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> ExceptionContext {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">throw</span>(<span style="color:#f92672">&amp;</span>self, exception: <span style="color:#a6e22e">anyhow</span>::Error) -&gt; <span style="color:#f92672">!</span> {
+</span></span><span style="display:flex;"><span>        self.exception.set(Some(exception));
+</span></span><span style="display:flex;"><span>        core::future::pending().<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In an async function with <code>ExceptionContext</code>, if you want to throw an exception, just use the <code>throw</code> method then await the return value.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">send</span>(ctx: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExceptionContext</span>, msg: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>, connected: <span style="color:#66d9ef">bool</span>) -&gt; <span style="color:#66d9ef">usize</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> connected {
+</span></span><span style="display:flex;"><span>        msg.len()
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        ctx
+</span></span><span style="display:flex;"><span>            .throw(anyhow::<span style="color:#a6e22e">anyhow!</span>(<span style="color:#e6db74">&#34;send error: not connected&#34;</span>))
+</span></span><span style="display:flex;"><span>            .<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now, how should we execute the function with exception? We need to prepare a future that wraps the async function result. It polls the inner future until either getting <code>Ready</code> or an exception is set in the context.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>pin_project_lite::<span style="color:#a6e22e">pin_project!</span> { <span style="color:#75715e">// pin-project-lite = &#34;0.2&#34;
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Catching</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span>, F<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        ctx: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">&#39;a</span> <span style="color:#a6e22e">ExceptionContext</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#[pin]</span>
+</span></span><span style="display:flex;"><span>        future: <span style="color:#a6e22e">F</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span>, F: <span style="color:#a6e22e">std</span>::future::Future<span style="color:#f92672">&gt;</span> std::future::Future <span style="color:#66d9ef">for</span> Catching<span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span>, F<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Output</span> <span style="color:#f92672">=</span> anyhow::Result<span style="color:#f92672">&lt;</span>F::Output<span style="color:#f92672">&gt;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">poll</span>(
+</span></span><span style="display:flex;"><span>        self: <span style="color:#a6e22e">std</span>::pin::Pin<span style="color:#f92672">&lt;&amp;</span><span style="color:#66d9ef">mut</span> Self<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>        cx: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> std::task::Context<span style="color:#f92672">&lt;</span>&#39;_<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>    ) -&gt; <span style="color:#a6e22e">std</span>::task::Poll<span style="color:#f92672">&lt;</span>Self::Output<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> this <span style="color:#f92672">=</span> self.project();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> p <span style="color:#f92672">=</span> this.future.poll(cx);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(exception) <span style="color:#f92672">=</span> this.ctx.exception.take() {
+</span></span><span style="display:flex;"><span>            std::task::Poll::Ready(Err(exception))
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            p.map(Ok)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Then we can implement a catching method that accepts an async function that requires an exception context and returns a <code>Catching</code> future.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> ExceptionContext {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">catching</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span>, Fu: <span style="color:#a6e22e">std</span>::future::Future, F: Fn(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">&#39;a</span> Self) -&gt; <span style="color:#a6e22e">Fu</span><span style="color:#f92672">&gt;</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">&#39;a</span> self,
+</span></span><span style="display:flex;"><span>        f: <span style="color:#a6e22e">F</span>,
+</span></span><span style="display:flex;"><span>    ) -&gt; <span style="color:#a6e22e">Catching</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span>, Fu<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        Catching {
+</span></span><span style="display:flex;"><span>            ctx: <span style="color:#a6e22e">self</span>,
+</span></span><span style="display:flex;"><span>            future: <span style="color:#a6e22e">f</span>(self),
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now we can execute a block with exceptions like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main(flavor = </span><span style="color:#e6db74">&#34;current_thread&#34;</span><span style="color:#75715e">)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> ExceptionContext::new()
+</span></span><span style="display:flex;"><span>        .catching(<span style="color:#f92672">|</span>ctx<span style="color:#f92672">|</span> <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">assert_eq!</span>(<span style="color:#ae81ff">5</span>, send(ctx, <span style="color:#e6db74">&#34;abcde&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">assert_eq!</span>(<span style="color:#ae81ff">3</span>, send(ctx, <span style="color:#e6db74">&#34;abc&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span>);
+</span></span><span style="display:flex;"><span>            send(ctx, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#66d9ef">false</span>).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">panic!</span>(<span style="color:#e6db74">&#34;Shouldn&#39;t reach here cause an exception is thrown&#34;</span>);
+</span></span><span style="display:flex;"><span>        })
+</span></span><span style="display:flex;"><span>        .<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">assert_eq!</span>(result.unwrap_err().to_string(), <span style="color:#e6db74">&#34;send error: not connected&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>You can find the complete code <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=a5c69b3a0c00d1558bbbe50d11c31c72">here</a>. I also made <a href="https://github.com/Jason5Lee/asynx">a crate</a> to provide a general implementation of
+<code>ExceptionContext</code> and a <code>Sync</code> version.</p>
+<p>There are pros and cons of this approach. The biggest pro is that it has no panic-unwind. You can use <code>panic = abort</code> while doing exception-style programming. However, there are the following cons.</p>
+<ul>
+<li>Only supports <code>async</code> function.</li>
+<li>The future will be canceled if an exception occurs, <a href="https://carllerche.com/2021/06/17/six-ways-to-make-async-rust-easier/">which can be problematic</a>.</li>
+<li>Exception-style is widely considered bad, especially in the Rust community, so even we can do it without panic-unwind it may still be a bad practice.</li>
+</ul>
+<p>This is just my idea, whether to use it is up to you.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

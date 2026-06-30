@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>F# on Jason5Lee&#39;s Blog</title>
+		<link>https://jason5lee.me/categories/f%23/</link>
+		<description>Recent content in F# on Jason5Lee&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 24 Mar 2022 18:31:32 +0000</lastBuildDate>
+		
+			<atom:link href="https://jason5lee.me/categories/f%23/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Why pipeline does it right?</title>
+				<link>https://jason5lee.me/blog/why-pipeline/</link>
+				<pubDate>Thu, 24 Mar 2022 18:31:32 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/why-pipeline/</guid>
+				<description>&lt;p&gt;When I first learned F#, one design I didn&amp;rsquo;t get is that pipeline operators is used far more often than dot( &lt;code&gt;.&lt;/code&gt; ). For example, for a C# expression like &lt;code&gt;x.Select(n =&amp;gt; ...)&lt;/code&gt; , you have to write &lt;code&gt;x |&amp;gt; List.map (fun n -&amp;gt; ...)&lt;/code&gt; in F#, which looks verbose at the first sight. But after I&amp;rsquo;ve done more programmings and more thinkings, I figured out that the dot is abused in most of the languages and the pipeline does it right. Here is my thought.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

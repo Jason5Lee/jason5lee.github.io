@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>My Understanding of OOP and FP // Jason5Lee&#39;s Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.163.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Jason5Lee" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.42bdc8a4f3066c478bcf0b98d065ccafb4da583810af2da8b2ba3f514d29d09f.css" />
+    
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="My Understanding of OOP and FP">
+	<meta name="twitter:description" content="In my previous article, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.
+To summarize briefly: OOP is used to express intentions about universal objects, whereas functional programming primarily focuses on specific types of objects.
+Encapsulation and Polymorphism Before we delve into OOP and FP, let’s first talk about my understanding of encapsulation and polymorphism. These terms frequently appear in discussions about OOP and occasionally in FP. They might seem unusual at first, but they are tied to two elementary notions: the what and the how.">
+
+    <meta property="og:url" content="https://jason5lee.me/blog/my-understanding-of-oop-and-fp/">
+	<meta property="og:site_name" content="Jason5Lee&#39;s Blog">
+	<meta property="og:title" content="My Understanding of OOP and FP">
+	<meta property="og:description" content="In my previous article, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.
+To summarize briefly: OOP is used to express intentions about universal objects, whereas functional programming primarily focuses on specific types of objects.
+Encapsulation and Polymorphism Before we delve into OOP and FP, let’s first talk about my understanding of encapsulation and polymorphism. These terms frequently appear in discussions about OOP and occasionally in FP. They might seem unusual at first, but they are tied to two elementary notions: the what and the how.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2022-08-30T22:56:00+00:00">
+		<meta property="article:modified_time" content="2022-08-30T22:56:00+00:00">
+		<meta property="article:tag" content="Programming">
+		<meta property="article:tag" content="OOP">
+		<meta property="article:tag" content="FP">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="/"><img class="app-header-avatar" src="/images/avatar.png" alt="Jason5Lee" /></a>
+      <span class="app-header-title">Jason5Lee&#39;s Blog</span>
+      <p>Ideas worth sharing</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">My Understanding of OOP and FP</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Aug 30, 2022
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          18 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="/tags/programming/">Programming</a>
+              <a class="tag" href="/tags/oop/">OOP</a>
+              <a class="tag" href="/tags/fp/">FP</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>In my <a href="/2022/08/24/my-views-on-programming-languages/">previous article</a>, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.</p>
+<p>To summarize briefly: OOP is used to express intentions about universal objects, whereas functional programming primarily focuses on specific types of objects.</p>
+<h2 id="encapsulation-and-polymorphism">Encapsulation and Polymorphism</h2>
+<p>Before we delve into OOP and FP, let&rsquo;s first talk about my understanding of encapsulation and polymorphism. These terms frequently appear in discussions about OOP and occasionally in FP. They might seem unusual at first, but they are tied to two elementary notions: the <em>what</em> and the <em>how</em>.</p>
+<p><strong>Encapsulation</strong> is designed to separate <em>how</em> from <em>what</em>. This separation allows the users of code focus solely on the <em>what</em>, while the <em>how</em> becomes irrelevant to them. Let&rsquo;s consider a function as an example. The function&rsquo;s signature informs us about its purpose, the <em>what</em>, whereas the body of the function describes the method of implementation, the <em>how</em>. As a user, or a caller of the function, you only need to concern yourself with the function&rsquo;s signature. The body of the function can be modified without affecting the caller, provided that the function&rsquo;s signature remains the same.</p>
+<p>Visibility control is another facet of encapsulation. By marking a method (or function, property, etc.) as non-public, we express that it belongs to the <em>how</em> category. It can be modified or removed when how it is implemented changes, without affecting users who cannot access it.</p>
+<p><strong>Polymorphism</strong>, on the other hand, permits us to perform a single task in various ways. Polymorphism takes on different forms in different programming languages, such as virtual functions, interfaces, and higher-order functions. Despite these differences, the core principle remains the same: we define <em>what</em> a method (or function, etc.) is, in other words, its signature. The implementation or the <em>how</em> can differ. This allows calls to the same method to have different implementations.</p>
+<p>In my view, encapsulation and polymorphism are tools that express the interplay between <em>what</em> and <em>how</em>. Various programming paradigms like OOP, FP, or languages like Rust, exhibit subtle differences in my use. My focus is more on whether the expression is intuitive enough, not merely the paradigm it belongs to.</p>
+<h2 id="object-oriented-programming-oop">Object-Oriented Programming (OOP)</h2>
+<p>OOP is an effective approach to represent various objects in programming, which explains its widespread use. Any criticism of OOP for its use of design patterns may not be entirely justified, as discussed in <a href="/2022/08/24/my-views-on-programming-languages/#Understanding-Design-Patterns">this article</a>.</p>
+<p>In OOP, classes serve to describe objects. Methods are used to express the actions that these objects can undertake, while properties convey the attributes of these objects. The feature of visibility control allows for encapsulation. Non-public members denote the &lsquo;how&rsquo; - the specifics of how the object functions. On the other hand, public members indicate the &lsquo;what&rsquo; - the operations that can be performed and the data that can be accessed.</p>
+<p>The concept of inheritance in OOP helps express &lsquo;is-a&rsquo; relationships. If class <code>A</code> inherits from class <code>B</code>, it suggests that <code>A</code> is a kind of <code>B</code>. Instances of class <code>A</code> can be viewed as objects of type <code>B</code>, possessing the methods and properties of class <code>B</code>. To achieve polymorphism, classes may contain virtual methods that subclasses can override. Interfaces, on the other hand, are used to highlight common traits between classes. Implementing an interface is akin to inheritance in that it also represents an &lsquo;is-a&rsquo; relationship, but it further specifies that a class (and other classes implementing the same interface) share a common trait. A single class can implement multiple interfaces, reflecting its potential to share different traits with different classes.</p>
+<p>There are programming languages not typically classified as object-oriented, given their lack of classes and interfaces. However, as I often stress, what matters is the ability to express intentions. If a language can communicate relationships with the same level of clarity, it should be deemed sufficient. Take Rust, for instance. While not strictly an OOP language, it leans towards composition over inheritance and uses traits to express shared characteristics. Despite not being formally OOP, Rust includes features for encapsulation and polymorphism. Hence, I believe Rust is not any less capable than OOP languages for this reason.</p>
+<h2 id="functional-programming-fp">Functional Programming (FP)</h2>
+<p>While OOP is indeed robust, one might ask, &ldquo;Why do we need FP?&rdquo; The answer lies in the uniqueness of some objects. Using only the general OOP features may lead to indirectness and code duplication. In my view, the purpose of FP language features is to better express specific groups of objects in a manner that aligns with our intentions.</p>
+<p>I advise against completely abandoning OOP in favor of FP, or vice versa. OOP is a versatile method for object expression, suitable for universal use. Yet, the uniqueness of some objects is an inherent complexity. Ignoring this won&rsquo;t simplify matters as we&rsquo;ll still need to handle these specific cases. Instead, recognizing and articulating these unique objects is a more beneficial approach.</p>
+<p>In subsequent sections, I will explore the features commonly found in FP languages, elucidating the types of objects each feature aims to express. My focus lies on the expressiveness of these languages. From my perspective, a language possesses a particular feature if the underlying intention of that feature can be directly expressed in the language. However, the specific way in which a language expresses an intention may vary. I use Rust, Kotlin, C#, Python with typing, and TypeScript as examples to explain how the intentions of these features can be expressed in languages that may not typically be considered functional.</p>
+<h3 id="optional-and-null-values">Optional and Null Values</h3>
+<p>Many programming languages include a value expressing &ldquo;non-existence&rdquo; — <code>null</code>, <code>nil</code>, or <code>undefined</code>. However, these languages often lack a clear means to express that a value is optional. Even when a value is expected to exist, the language doesn&rsquo;t prevent you from using <code>null</code>, and errors only occur when operations are attempted on this <code>null</code> value.</p>
+<p>Conversely, functional programming languages typically lack values like <code>null</code>. These languages employ a type <code>Option&lt;T&gt;</code> to represent an optional value. An <code>Option&lt;T&gt;</code> can contain a value of type <code>T</code> or &ldquo;non-existence.&rdquo; You cannot directly operate on an <code>Option&lt;T&gt;</code> as if it were a type <code>T</code>; the value inside must be accessed after verifying its existence. Rust also follows this method.</p>
+<p>Alternatively, we can retain <code>null</code>, but whether a value is optional will be indicated in the type. In Kotlin and C#<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, you append a <code>?</code> to the type, while in TypeScript and Python&rsquo;s type annotations, this is indicated through a union of the type and a non-existent value. If you attempt an operation that requires the value existence on a optional type without checking its existence, the type checker will flag an error.</p>
+<p>Both methods provide accurate indications of whether a value is optional. They not only make the code align closely with our intention by expressing whether a value is optional, but also enable type checkers to identify errors that fail to appropriately handle missing optional values.</p>
+<p>Sometimes, we might want to &ldquo;fail fast&rdquo; when a value doesn&rsquo;t exist. If the absence of an expected value means that the environment or configuration doesn&rsquo;t meet requirements, or that there is a logical error (a bug), you might want the program to terminate immediately. In Kotlin, you can use <code>!!</code>, and in Rust, the <code>unwrap</code> or <code>expect</code> method. This process effectively handles the non-existence scenario, expressing the requirement for existence. However, these should only be used in situations where absence necessitates a &ldquo;fail-fast&rdquo; response. If non-existence needs proper handling, then it should be done appropriately.</p>
+<h3 id="higher-order-functions-and-actions">Higher-order Functions and Actions</h3>
+<p>There are times when you might want to express intentions like &ldquo;make a new list from an existing list, but multiply each element by 2&rdquo; or &ldquo;set up an action to display a message when a user clicks a button.&rdquo; An action can be the parameter of another action, like &ldquo;multiply by 2&rdquo; or &ldquo;display the message&rdquo;. In programming, we often represent these actions as functions. Furthermore, in FP, a function can also be an object, allowing it to be passed as an argument.</p>
+<p>Modern programming languages mostly support higher-order functions. Some languages utilize interfaces to represent functions, while others employ specialized types. Many languages offer a feature known as &ldquo;lambda expressions&rdquo; to create function objects, which essentially form the body of the function.</p>
+<p>Let&rsquo;s consider an example. Suppose we have a list of data with <code>score</code> and <code>id</code>, and we want to filter out the <code>id</code> of data entries with a score above 60. The following Kotlin code does the job:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span>l.filter { <span style="color:#66d9ef">it</span>.score &gt; <span style="color:#ae81ff">60</span> }
+</span></span><span style="display:flex;"><span>    .map { <span style="color:#66d9ef">it</span>.id }
+</span></span></code></pre></div><p>This code succinctly expresses the intention of selecting data with a score above 60 and extracting their <code>id</code>. If we were to use a more traditional approach, we would need to create a mutable list to hold the results, iterate through the original list, and after checking each score, insert the <code>id</code> into our result list. This process rewrites our initial intention, making it less straightforward.</p>
+<h3 id="immutability">Immutability</h3>
+<p>At times, it&rsquo;s important to express the concept of an object&rsquo;s immutability. A typical example is when an object holds information that multiple references will read. You&rsquo;d want everyone to access the same unaltered data, similar to how an announcement on a bulletin board should be read but not changed. In concurrent programming, immutable objects help prevent data races.</p>
+<p>Strings are a commonly used example of an immutable object. In most programming languages, a string is represented by a reference or a pointer to the string content. Because strings are designed to be immutable, we don&rsquo;t have to worry about their content being changed by other references. This allows us to focus more on the string content rather than the object it refers to.</p>
+<p>In Java, each primitive type has an equivalent boxed type. Like other class objects, these boxed types are represented by references. However, their immutability means we usually don&rsquo;t need to worry about which object is referenced, only its value. Languages like Kotlin and Scala leverage this to minimize the difference between primitive types and boxed types. They provide a single type for each numeric type, leaving it to the compiler to decide whether to use the primitive or the boxed type. The premise of this design is the immutability of boxed types.</p>
+<p>In an ideal scenario, immutable objects should never be modified. However, achieving this can be challenging. Sometimes, third-party functions might operate on mutable objects without actually modifying them. In these cases, a practical solution is to use <em>conventional immutability</em>. Here, while mutable operations on objects intended to be immutable may be technically possible, they should not be performed. Read-only can be used to reduce the risk of unwanted modifications. Providing a read-only object reference prohibits the modification of the object. Although other references could modify the object, this approach expresses the intention of immutability. Read-only can be implemented via an interface containing only read operations.</p>
+<div class="tabs" data-tab-group="immutable">
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="immutable"
+  id="immutable-kotlin-0"
+  checked
+>
+<label class="tabs-label" for="immutable-kotlin-0">Kotlin</label>
+<div class="tabs-panel">In Kotlin, interfaces for collections that don&rsquo;t begin with <em><code>Mutable</code></em> (like <code>List&lt;T&gt;</code>, <code>Set&lt;T&gt;</code>) are read-only. Also, functions used to construct collections that don&rsquo;t start with <em><code>mutable</code></em> (like <code>listOf</code>, <code>setOf</code>) return immutable collections.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="immutable"
+  id="immutable-rust-1"
+  
+>
+<label class="tabs-label" for="immutable-rust-1">Rust</label>
+<div class="tabs-panel">Rust employs borrow checking to ensure that a value with multiple references stays immutable unless explicitly enclosed in a unique container like <code>RefCell</code> or <code>Mutex</code>.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="immutable"
+  id="immutable-python-2"
+  
+>
+<label class="tabs-label" for="immutable-python-2">Python</label>
+<div class="tabs-panel">Python includes immutable collections like <code>tuple</code> and <code>frozenset</code>. It also provides a read-only dictionary wrapper <code>MappingProxyType</code> and read-only types such as <code>Sequence</code>, <code>AbstractSet</code>, and <code>Mapping</code> within the <code>typing</code> module.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="immutable"
+  id="immutable-typescript-3"
+  
+>
+<label class="tabs-label" for="immutable-typescript-3">TypeScript</label>
+<div class="tabs-panel">In TypeScript, the <code>readonly</code> keyword can enforce read-only properties or arrays, and <code>Object.freeze</code> can prevent an object from being mutated.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="immutable"
+  id="immutable-c-4"
+  
+>
+<label class="tabs-label" for="immutable-c-4">C#</label>
+<div class="tabs-panel">In C#, interfaces for collections that begin with <em><code>IReadOnly</code></em> (like <code>IReadOnlyList&lt;T&gt;</code>, <code>IReadOnlyDictionary&lt;T&gt;</code>) are read-only.</div>
+
+
+</div>
+
+<p>Furthermore, there are third-party libraries that provide immutable data structures for these languages. Some of these structures offer efficient partial update operations. For instance, a set can be created with some elements added (without mutating the original set) without having to clone the entire set. Instead, it shares part of its structure with the new set.</p>
+<h3 id="record">Record</h3>
+<p>A record in functional programming expresses an immutable object made up of properties. Their equality is determined by the values of the properties, not the references. Records can be built by defining values for properties and support partial updates. That is, a new record can be created based on an existing one by defining the values for some properties while keeping the rest unchanged.</p>
+<div class="tabs" data-tab-group="record">
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record"
+  id="record-kotlin-0"
+  checked
+>
+<label class="tabs-label" for="record-kotlin-0">Kotlin</label>
+<div class="tabs-panel">Kotlin uses <code>data class</code> to represent records. <code>val</code> can be used to keep properties immutable. Kotlin supports named parameters, so it is natural to build a record by defining values for properties. Data classes also contains <code>copy</code> method to clone the object and let you define new values for some properties, thereby enabling partial updates.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record"
+  id="record-rust-1"
+  
+>
+<label class="tabs-label" for="record-rust-1">Rust</label>
+<div class="tabs-panel">In Rust, records can be represented through a struct with <code>#[derive(PartialEq, Eq)]</code>, and the borrow checker controls its mutability. Partial updates can be achieved using the <a href="https://doc.rust-lang.org/book/ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax">struct update syntax</a>.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record"
+  id="record-python-2"
+  
+>
+<label class="tabs-label" for="record-python-2">Python</label>
+<div class="tabs-panel">In Python, the <code>dataclass</code> annotation from the <code>dataclasses</code> module, used with the <code>frozen</code> option, allows you to represent records. It generates the <code>__eq__</code> method. To partially update a record, the <code>dataclasses</code> module provides a <a href="https://docs.python.org/3/library/dataclasses.html#dataclasses.replace"><code>replace</code></a> function.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record"
+  id="record-typescript-3"
+  
+>
+<label class="tabs-label" for="record-typescript-3">TypeScript</label>
+<div class="tabs-panel">In TypeScript, a record can be presented as an object type. Fields can be made read-only with the <code>readonly</code> keyword, and <code>Object.freeze</code> ensures that the object won&rsquo;t be altered. Partial updates can be performed using <a href="https://www.javascripttutorial.net/es-next/javascript-object-spread/">Object Spread</a>. However, TypeScript currently doesn&rsquo;t support customizing object equality.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="record"
+  id="record-c-4"
+  
+>
+<label class="tabs-label" for="record-c-4">C#</label>
+<div class="tabs-panel">Records were first introduced as reference types in C# 9 and later as value types in C# 10. You can switch a record from a reference type to a value type, or vice versa, with minimal impact on its behavior. This is thanks to records being immutable, and their equality being based on the values of the properties, rather than on the reference.</div>
+
+
+</div>
+
+<h3 id="newtype">Newtype</h3>
+<p>Some data is represented by an existing type but has unique meanings and constraints. For instance, a username can be represented as a string, but it&rsquo;s more than a string due to specific restrictions and its unique meaning, differentiating it from other string-represented data like an email address.</p>
+<p>FP offers a Newtype feature to represent such data. Considering the username example, we can use a string wrapper class (a class containing only a string) to symbolize the username, which equates based on the string value. This approach offers several benefits:</p>
+<ul>
+<li>It clearly identifies it as a username (as opposed to a regular string).</li>
+<li>It indicates the boundary between validated and unvalidated<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> values.</li>
+<li>If a string is mistakenly used as a username, a type-check error occurs. This can be useful for catching mistakes, especially when input is used directly without undergoing validation.</li>
+<li>If an email address is incorrectly used as a username, a type check error occurs.</li>
+</ul>
+<div class="tabs" data-tab-group="newtype">
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="newtype"
+  id="newtype-kotlin-0"
+  checked
+>
+<label class="tabs-label" for="newtype-kotlin-0">Kotlin</label>
+<div class="tabs-panel"><p>In Kotlin, <code>value class</code>es can represent newtypes. To enforce the value being valid, you can perform validation in the <code>init</code> block or make the constructor private and provide a validation method. The latter allows invalid errors to return more than just exceptions, like the failure of <code>Result&lt;T&gt;</code>.</p>
+<p>Newtypes can also be depicted by a data class, which is similar to a value class, but if you don&rsquo;t validate in the <code>init</code> block, even with a private constructor, objects with invalid values could be created by the <code>copy</code> function.</p>
+</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="newtype"
+  id="newtype-rust-1"
+  
+>
+<label class="tabs-label" for="newtype-rust-1">Rust</label>
+<div class="tabs-panel">In Rust, Newtypes can be implemented with a struct that contains a single field. If you want to enforce the value being valid, the field can be made private. In this case, you should provide a verification method that returns a newtype value, along with methods to access and immutably borrow the field.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="newtype"
+  id="newtype-python-2"
+  
+>
+<label class="tabs-label" for="newtype-python-2">Python</label>
+<div class="tabs-panel">Python can implement newtypes using <a href="https://docs.python.org/3/library/typing.html#newtype"><code>NewType</code></a> from the <code>typing</code> module. It doesn&rsquo;t enforce the value being valid, but explicitly constructing newtype values considerably reduces the error of mistaking an unvalidated value for a validated one.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="newtype"
+  id="newtype-typescript-3"
+  
+>
+<label class="tabs-label" for="newtype-typescript-3">TypeScript</label>
+<div class="tabs-panel">In TypeScript, new types can be realized using the <a href="https://stackoverflow.com/a/56749647/7296427">branded type</a> pattern. Like Python&rsquo;s NewType, it cannot enforce the value being valid.</div>
+
+
+<input
+  class="tabs-input"
+  type="radio"
+  name="newtype"
+  id="newtype-c-4"
+  
+>
+<label class="tabs-label" for="newtype-c-4">C#</label>
+<div class="tabs-panel">In C#, new types can be implemented by a record type with one field. It cannot enforce the value being valid.</div>
+
+
+</div>
+
+<h3 id="algebraic-data-types">Algebraic Data Types</h3>
+<p>Certain data types comprise multiple variants, each with distinct contents. In our dealings with data, we often need to approach each variant differently. Algebraic Data Types (ADTs) in functional programming allow us to articulate this kind of data.</p>
+<p>An &ldquo;is-a&rdquo; relationship can often be observed between the data and its variants. You might prefer to express the data as a class and the process of handling it as a virtual method. Then, each variant would inherit from the class, overriding the methods to implement variant-specific processing. However, with data, the variants and their content are usually known and relatively fixed, while the data processing methods are often unpredictable and extendable.</p>
+<p>The SOLID principles include the &ldquo;open-closed principle&rdquo;, which states that a class should be open for extensions but closed for modifications. Importantly, this rule doesn&rsquo;t explicitly define what constitutes a modification or an extension. Sometimes, adding a subclass could be viewed as an extension, while adding a method could be viewed as a modification. Other times, adding a process could be viewed as an extension, while adding a variant could be seen as a modification. None of these possibilities should be overlooked, and Algebraic Data Types align well with this latter perspective.</p>
+<p>In Rust, the <code>enum</code> keyword allows us to naturally express this data. Union type can express this in TypeScript and Python&rsquo;s type annotations. Kotlin allows marking classes with <code>sealed</code> to inhibit external class inheritance.</p>
+<p>To process this data, Rust offers the pattern matching feature, a staple in FP. With pattern matching, you can write code for each variant of data, with the content of each variant bound to its specific code path&rsquo;s local value. Pattern matching ensures comprehensive coverage of all cases through exhaustiveness checks.</p>
+<p>In fact, the <code>Option</code> type referenced in the <em>Optional and null</em> section is an Algebraic Data Type. It has two variants: existing (usually called <em>Some</em>) and non-existing (usually called <em>None</em>). Only the existing variant carries a value.</p>
+<p>In Kotlin, TypeScript, and Python type checking, you can use smart-cast to express this processing logic. Provided that the data belongs to a particular variant, the data will automatically assume the type of that variant, granting access to its content. These languages also enforce exhaustiveness checks.</p>
+<p>If exhaustiveness checking is not inherently supported, patterns such as the Visitor pattern can implement it. However, these patterns introduce complexity in expression. In C#, certain Roslyn libraries<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> can be used to add an exhaustiveness check to pattern matching.</p>
+<h3 id="pipeline">Pipeline</h3>
+<p>Sometimes, we want to express a series of steps where each step produces a result that is used in the next step. For example, consider the process of adding 5 to a number <code>a</code>, multiplying it by 3, applying a specific function <code>ln</code>, and then outputting the result. We could write this as <code>print(ln((a + 5) * 3))</code>. However, there are two aspects that are not straightforward. First, every step requires us to wrap the previous steps in parentheses. For instance, after writing <code>a + 5</code>, we need to add parentheses before writing <code>* 3</code>, and then again before <code>ln</code>, and so on. Second, the order in the code is the reverse of the actual process. The <code>print</code> at the beginning is actually the last step. This creates a discrepancy between our code and our thought process, and unless we think through the entire process beforehand, it can lead to frequent jumps during coding.</p>
+<p>In functional programming, Pipeline is an operator for function calls (here exemplified as <code>|&gt;</code>), which allows you to write a function call <code>f(a)</code> as <code>a |&gt; f</code>. Combined with Lambda expressions, a series of steps can be represented by a continuous Pipeline. For example, the process mentioned above could be written as <code>a |&gt; x =&gt; x + 5 |&gt; x =&gt; x * 3 |&gt; ln |&gt; println</code>. This means that <code>a</code> is used as a parameter in a function that returns the result of adding 5, then this result is used as a parameter in a function that multiplies by 3, followed by applying the <code>ln</code> function, and finally printing the result. This way of writing more closely matches the series of steps in our thought process.</p>
+<p>In some programming languages that support extension methods, such as Kotlin, C#, and Rust<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, pipelines can be expressed as an extension method. These methods take a higher-order function as a parameter and return the resultant value. For example, in Kotlin&rsquo;s standard library, there&rsquo;s an extension method <code>let</code>, and our example could be written as <code>a.let { it + 5 }.let { it * 3 }.let { ln(it) }.let { println(it) }</code>. In TypeScript, Lodash and Ramda contain functions that can be used to express a pipeline<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, although they also require prior wrapping once, and there is a pipeline proposal for EcmaScript<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.</p>
+<p>The intention of a pipeline can also be expressed in a very simple way: using intermediate variables. For example, the process mentioned earlier can be implemented with the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">val</span> plus5 = v + <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">val</span> mul3 = plus5 * <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">val</span> lned = ln(mul3)
+</span></span><span style="display:flex;"><span>println(lned)
+</span></span></code></pre></div><p>These intermediate variable names seem redundant because they are used immediately after definition, and their meanings can be inferred from the context. These intermediate results don&rsquo;t have specific names in our thought process, but we need to manually name them when not using Pipelines.</p>
+<p>One solution is to use simple names, like single letters. However, this approach has two issues. First, these names can easily conflict. This problem can be somewhat mitigated in languages like Rust, which allows the use of the same identifier, or in languages like Python with Typing, which allows an identifier to have different types and can be correctly inferred. The second issue is potential criticism for using meaningless identifiers. In most cases, identifiers should not be a single letter, but this is one of the few exceptions. An identifier doesn&rsquo;t have to have a meaningful name if it does not have a name in our thought process at all.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In this article, I&rsquo;ve shared my perspective on OOP and FP. I view OOP as a broad method for expressing objects, while FP is better suited for specific cases.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The feature of nullable reference types was introduced in C# 8. To maintain backward compatibility, a nullable context has been implemented. For more information, refer to the official documentation regarding <a href="https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references">Nullable Reference Types</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>The term <em>Unvalidated</em> refers to a value that hasn&rsquo;t been validated yet. It could either be valid or invalid.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Such as <a href="https://github.com/WalkerCodeRanger/ExhaustiveMatching">WalkerCodeRanger/ExhaustiveMatching</a>.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>In Rust, extension methods can be implemented by defining a trait and then implementing the trait for the type. The <a href="https://crates.io/crates/apply">apply</a> crate implements a pipeline method in this way.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://docs-lodash.com/v4/flow/"><code>flow</code> in Lodash</a> and <a href="https://ramdajs.com/docs/#pipe"><code>pipe</code> in Ramda</a>.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="https://tc39.es/proposal-pipeline-operator/">ES pipeline proposal</a>.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>FP on Jason5Lee&#39;s Blog</title>
+		<link>https://jason5lee.me/tags/fp/</link>
+		<description>Recent content in FP on Jason5Lee&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 30 Aug 2022 22:56:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://jason5lee.me/tags/fp/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>My Understanding of OOP and FP</title>
+				<link>https://jason5lee.me/blog/my-understanding-of-oop-and-fp/</link>
+				<pubDate>Tue, 30 Aug 2022 22:56:00 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/my-understanding-of-oop-and-fp/</guid>
+				<description>&lt;p&gt;In my &lt;a href=&#34;https://jason5lee.me/2022/08/24/my-views-on-programming-languages/&#34;&gt;previous article&lt;/a&gt;, I discussed my understanding of programming languages in general. In this article, I will concentrate on explaining object-oriented programming (OOP) and functional programming (FP) as I understand them.&lt;/p&gt;&#xA;&lt;p&gt;To summarize briefly: OOP is used to express intentions about universal objects, whereas functional programming primarily focuses on specific types of objects.&lt;/p&gt;&#xA;&lt;h2 id=&#34;encapsulation-and-polymorphism&#34;&gt;Encapsulation and Polymorphism&lt;/h2&gt;&#xA;&lt;p&gt;Before we delve into OOP and FP, let&amp;rsquo;s first talk about my understanding of encapsulation and polymorphism. These terms frequently appear in discussions about OOP and occasionally in FP. They might seem unusual at first, but they are tied to two elementary notions: the &lt;em&gt;what&lt;/em&gt; and the &lt;em&gt;how&lt;/em&gt;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Why pipeline does it right?</title>
+				<link>https://jason5lee.me/blog/why-pipeline/</link>
+				<pubDate>Thu, 24 Mar 2022 18:31:32 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/why-pipeline/</guid>
+				<description>&lt;p&gt;When I first learned F#, one design I didn&amp;rsquo;t get is that pipeline operators is used far more often than dot( &lt;code&gt;.&lt;/code&gt; ). For example, for a C# expression like &lt;code&gt;x.Select(n =&amp;gt; ...)&lt;/code&gt; , you have to write &lt;code&gt;x |&amp;gt; List.map (fun n -&amp;gt; ...)&lt;/code&gt; in F#, which looks verbose at the first sight. But after I&amp;rsquo;ve done more programmings and more thinkings, I figured out that the dot is abused in most of the languages and the pipeline does it right. Here is my thought.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

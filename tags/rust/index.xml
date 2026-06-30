@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Rust on Jason5Lee&#39;s Blog</title>
+		<link>https://jason5lee.me/tags/rust/</link>
+		<description>Recent content in Rust on Jason5Lee&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 11 Mar 2022 22:40:23 +0000</lastBuildDate>
+		
+			<atom:link href="https://jason5lee.me/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Simulate exception in async Rust</title>
+				<link>https://jason5lee.me/blog/rust-exception-async/</link>
+				<pubDate>Fri, 11 Mar 2022 22:40:23 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/rust-exception-async/</guid>
+				<description>&lt;p&gt;&lt;strong&gt;WARNING&lt;/strong&gt;: This may be a bad practice. The point of this article is just to share my idea.&lt;/p&gt;&#xA;&lt;p&gt;Exception is a popular feature in many programming languages. Unlike Rust where errors are considered as a return value of the &lt;code&gt;Err&lt;/code&gt; case of &lt;code&gt;Result&lt;/code&gt;, in these languages errors are thrown like &lt;code&gt;panic&lt;/code&gt;. The caller may catch the errors and process them similar to &lt;code&gt;catch_unwind&lt;/code&gt; in Rust. Different people may have different preferences on the error handling style, but panic-unwind is always considered a bad practice and should be avoided if possible. So using exception-like error handling in Rust is impossible.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Customized trait object in Rust</title>
+				<link>https://jason5lee.me/blog/rust-costumized-trait-object/</link>
+				<pubDate>Sat, 11 Jan 2020 21:03:30 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/rust-costumized-trait-object/</guid>
+				<description>&lt;p&gt;I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it&amp;rsquo;s impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library &lt;a href=&#34;https://github.com/Jason5Lee/rust-recur-fn&#34;&gt;RecurFn&lt;/a&gt;, and I develop a workaround, calling it &lt;strong&gt;customized trait object&lt;/strong&gt;.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

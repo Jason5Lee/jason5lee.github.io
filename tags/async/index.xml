@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Async on Jason5Lee&#39;s Blog</title>
+		<link>https://jason5lee.me/tags/async/</link>
+		<description>Recent content in Async on Jason5Lee&#39;s Blog</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 24 Jun 2023 19:35:34 +0000</lastBuildDate>
+		
+			<atom:link href="https://jason5lee.me/tags/async/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Handling Concurrency: Understanding Coroutines, Async/Await, Scheduling, and More</title>
+				<link>https://jason5lee.me/blog/understanding-coroutines/</link>
+				<pubDate>Sat, 24 Jun 2023 19:35:34 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/understanding-coroutines/</guid>
+				<description>&lt;p&gt;We often need to execute multiple tasks simultaneously in the program, such as a server handling multiple requests at the same time or a browser rendering the UI while performing I/O operations. As concurrency in our programs increases, technologies like asynchronous I/O, coroutines, and async/await are being used to support it. In this article, I&amp;rsquo;ll share my understanding of these technologies, hoping to help you comprehend and apply them.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-fundamental-idea-of-coroutines&#34;&gt;The Fundamental Idea of Coroutines&lt;/h2&gt;&#xA;&lt;p&gt;The OS provides threads to run parallel tasks, but creating and scheduling a lot of threads can lead to high costs. Even with thread pooling, if a large amount of concurrency is needed at the same time, the number of threads in the thread pool must also be large.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Simulate exception in async Rust</title>
+				<link>https://jason5lee.me/blog/rust-exception-async/</link>
+				<pubDate>Fri, 11 Mar 2022 22:40:23 +0000</pubDate>
+				<guid>https://jason5lee.me/blog/rust-exception-async/</guid>
+				<description>&lt;p&gt;&lt;strong&gt;WARNING&lt;/strong&gt;: This may be a bad practice. The point of this article is just to share my idea.&lt;/p&gt;&#xA;&lt;p&gt;Exception is a popular feature in many programming languages. Unlike Rust where errors are considered as a return value of the &lt;code&gt;Err&lt;/code&gt; case of &lt;code&gt;Result&lt;/code&gt;, in these languages errors are thrown like &lt;code&gt;panic&lt;/code&gt;. The caller may catch the errors and process them similar to &lt;code&gt;catch_unwind&lt;/code&gt; in Rust. Different people may have different preferences on the error handling style, but panic-unwind is always considered a bad practice and should be avoided if possible. So using exception-like error handling in Rust is impossible.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

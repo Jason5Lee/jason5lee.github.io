@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Customized trait object in Rust // Jason5Lee&#39;s Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.163.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Jason5Lee" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.42bdc8a4f3066c478bcf0b98d065ccafb4da583810af2da8b2ba3f514d29d09f.css" />
+    
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Customized trait object in Rust">
+	<meta name="twitter:description" content="I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it’s impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library RecurFn, and I develop a workaround, calling it customized trait object.">
+
+    <meta property="og:url" content="https://jason5lee.me/blog/rust-costumized-trait-object/">
+	<meta property="og:site_name" content="Jason5Lee&#39;s Blog">
+	<meta property="og:title" content="Customized trait object in Rust">
+	<meta property="og:description" content="I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it’s impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library RecurFn, and I develop a workaround, calling it customized trait object.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="blog">
+		<meta property="article:published_time" content="2020-01-11T21:03:30+00:00">
+		<meta property="article:modified_time" content="2020-01-11T21:03:30+00:00">
+		<meta property="article:tag" content="Rust">
+		<meta property="article:tag" content="Trait">
+		<meta property="article:tag" content="Polymorphism">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="/"><img class="app-header-avatar" src="/images/avatar.png" alt="Jason5Lee" /></a>
+      <span class="app-header-title">Jason5Lee&#39;s Blog</span>
+      <p>Ideas worth sharing</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Customized trait object in Rust</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jan 11, 2020
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          3 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="/tags/rust/">Rust</a>
+              <a class="tag" href="/tags/trait/">Trait</a>
+              <a class="tag" href="/tags/polymorphism/">Polymorphism</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>I love the traits in Rust language. Rust uses one mechanism for both compile-time polymorphism and runtime polymorphism, which is elegant. However, the runtime polymorphism in Rust is not very flexible. Some traits cannot be used as a trait object, and it&rsquo;s impossible to specify whether a method is resolved dynamically or statically. This shortage is reflected in my recursive function library <a href="https://github.com/Jason5Lee/rust-recur-fn">RecurFn</a>, and I develop a workaround, calling it <strong>customized trait object</strong>.</p>
+<p>For example, assume we have a trait, <code>Foo</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">trait</span> Foo {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">foo</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#a6e22e">impl</span> Fn() -&gt; ());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">foo_twice</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#a6e22e">impl</span> Fn() -&gt; () <span style="color:#f92672">+</span> Copy) {
+</span></span><span style="display:flex;"><span>        self.foo(f);
+</span></span><span style="display:flex;"><span>        self.foo(f)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In which method <code>foo</code> represents a polymorphic action, while method <code>foo_twice</code> represents a static action and should not be overridden.</p>
+<p>This trait cannot be used as a trait object, because both methods have a <code>impl Fn() -&gt; ()</code> parameter. But we can turn it into a trait object in the following way: we can replace <code>impl Fn() -&gt; ()</code> by <code>&amp;dyn Fn() -&gt; ()</code>, and we can statically resolve the method <code>foo_twice</code>.</p>
+<p>So we can create a <em>dynamic</em> version of the trait <code>Foo</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">trait</span> DynFoo {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">dyn_foo</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#66d9ef">&amp;</span>Fn() -&gt; ());
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// `foo_twice` does not present because we want it statically resolved.
+</span></span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The trait object <code>dyn DynFoo</code> is the customized trait object. We hope that <code>dyn DynFoo</code> can be treated as the trait object of <code>Foo</code>. We need to implement:</p>
+<ol>
+<li>For any pointer to the implementation of <code>Foo</code>, it can be converted to the pointer to <code>dyn DynFoo</code>.</li>
+<li><code>dyn DynFoo</code> implements <code>Foo</code>.</li>
+</ol>
+<p>For 1, it can be implemented by implements <code>DynFoo</code> for all implementations of <code>Foo</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>F: <span style="color:#a6e22e">Foo</span><span style="color:#f92672">&gt;</span> DynFoo <span style="color:#66d9ef">for</span> F {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">dyn_foo</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">dyn</span> Fn() -&gt; ()) {
+</span></span><span style="display:flex;"><span>        self.foo(f)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>For 2, it can be implemented by implements <code>Foo</code> for <code>dyn Foo</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Foo <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">dyn</span> DynFoo {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">foo</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#a6e22e">impl</span> Fn() -&gt; ()) {
+</span></span><span style="display:flex;"><span>        self.dyn_foo(<span style="color:#f92672">&amp;</span>f)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now the following code compiles.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> foo: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">dyn</span> DynFoo <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>FooImpl::new(); <span style="color:#75715e">// FooImpl::new() returns an implementation of Foo.
+</span></span></span><span style="display:flex;"><span>foo.dyn_foo(<span style="color:#f92672">&amp;||</span> {});
+</span></span><span style="display:flex;"><span>foo.foo_twice(<span style="color:#f92672">&amp;||</span> {});
+</span></span></code></pre></div><p>The problem seems to be solved. However, Rust has a weird rule: in <code>impl Foo for dyn DynFoo</code>, <code>DynFoo</code> has <code>'static</code> lifetime, and <code>DynFoo</code> cannot has <code>Send</code> or <code>Sync</code> flag. The following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">test_complex</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span><span style="color:#f92672">&gt;</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> a: Box<span style="color:#f92672">&lt;</span>DynFoo <span style="color:#f92672">+</span> Send <span style="color:#f92672">+</span> <span style="color:#a6e22e">&#39;a</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> Box::new(FooImpl::new());
+</span></span><span style="display:flex;"><span>    a.foo_twice(<span style="color:#f92672">&amp;||</span> {});
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>cannot compile.</p>
+<p>To solve this problem, we need to make four copies of the code, and change the <code>impl</code> part of each copy into <code>impl&lt;'a&gt; Foo for DynFoo + 'a</code>, <code>impl&lt;'a&gt; Foo for DynFoo + 'a + Send</code>, <code>impl&lt;'a&gt; Foo for DynFoo + 'a + Sync</code>, <code>impl&lt;'a&gt; Foo for DynFoo + 'a + Send + Sync</code>.</p>
+<p>To reduce this duplication, we can create a macro to do it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>macro_rules<span style="color:#f92672">!</span> impl_dyn_with_markers {
+</span></span><span style="display:flex;"><span>    (<span style="color:#75715e">$($marker</span>:<span style="color:#a6e22e">ident</span>),<span style="color:#f92672">*</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span><span style="color:#f92672">&gt;</span> Foo <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">dyn</span> DynFoo <span style="color:#f92672">+</span> <span style="color:#a6e22e">&#39;a</span><span style="color:#75715e">$(</span> <span style="color:#f92672">+</span> <span style="color:#75715e">$marker</span>)<span style="color:#f92672">*</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">foo</span>(<span style="color:#f92672">&amp;</span>self, f: <span style="color:#a6e22e">impl</span> Fn() -&gt; ()) {
+</span></span><span style="display:flex;"><span>                self.dyn_foo(<span style="color:#f92672">&amp;</span>f)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">impl_dyn_with_markers!</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">impl_dyn_with_markers!</span> {Send}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">impl_dyn_with_markers!</span> {Sync}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">impl_dyn_with_markers!</span> {Send, Sync}
+</span></span></code></pre></div><p>You can find the example code <a href="https://github.com/Jason5Lee/learn/blob/master/Rust/src/tests/customized_trait_object.rs">here</a>, this strategy is used in <a href="https://github.com/Jason5Lee/rust-recur-fn">RecurFn</a>.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
